@@ -89,7 +89,7 @@ app.use('/api/*', (req, res) => {
 
 // ─── Serve React Frontend in Production ───────────────────────────────────────
 if (process.env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, '../../../dist')
+  const distPath = path.join(__dirname, '../../client/dist')
   app.use(express.static(distPath))
 
   app.get('*', (req, res) => {
