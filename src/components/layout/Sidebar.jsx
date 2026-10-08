@@ -59,6 +59,7 @@ export default function Sidebar() {
     <>
       {/* Desktop Sidebar */}
       <motion.aside
+        id="sidebar"
         animate={{ width: collapsed ? 64 : 272 }}
         transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
         className="hidden lg:flex flex-col flex-shrink-0 h-full overflow-hidden"
@@ -73,7 +74,7 @@ export default function Sidebar() {
       {/* Mobile Hamburger Button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-3.5 left-4 z-40 w-9 h-9 rounded-xl flex items-center justify-center"
+        className="lg:hidden absolute top-3.5 left-4 z-40 w-9 h-9 rounded-xl flex items-center justify-center"
         style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
         aria-label="Open menu"
       >
@@ -126,27 +127,15 @@ function SidebarContent({ collapsed, user, dispatch, onClose, showCloseButton })
               transition={{ duration: 0.15 }}
               className="flex items-center gap-2.5"
             >
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center shadow-sm"
-                style={{ background: 'var(--text-primary)' }}
-              >
-                <BookOpen size={16} className="text-[var(--bg-page)]" />
-              </div>
-              <div>
-                <span className="font-black text-base tracking-tight" style={{ color: 'var(--text-primary)' }}>
-                  StudyFlow
-                </span>
-              </div>
+              <img src="/favicon.jpg" alt="Plannova Logo" className="h-9 w-9 rounded-xl object-cover shadow-sm" />
+              <span className="font-black font-logo italic text-xl tracking-tight ml-1" style={{ color: 'var(--text-primary)' }}>Plannova</span>
             </motion.div>
           )}
         </AnimatePresence>
 
         {collapsed && (
-          <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center mx-auto shadow-sm"
-            style={{ background: 'var(--text-primary)' }}
-          >
-            <BookOpen size={16} className="text-[var(--bg-page)]" />
+          <div className="mx-auto">
+            <img src="/favicon.jpg" alt="Logo" className="w-8 h-8 rounded-full object-cover shadow-sm" />
           </div>
         )}
 

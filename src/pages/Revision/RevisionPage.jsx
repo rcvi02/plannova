@@ -29,7 +29,7 @@ export default function RevisionPage() {
   const handleComplete = () => {
     if (!completeModal) return
     dispatch(completeRevision({ id: completeModal.id, confidence }))
-    toast.success('Revision completed! 🧠 Next due date scheduled.')
+    toast.success('Revision completed! Next due date scheduled.')
     setCompleteModal(null)
   }
 
@@ -87,7 +87,7 @@ export default function RevisionPage() {
             </motion.div>
           )
         })}
-        {items.length === 0 && <p className="text-sm" style={{ color: 'var(--text-muted)' }}>None in this category 🎉</p>}
+        {items.length === 0 && <p className="text-sm" style={{ color: 'var(--text-muted)' }}>None in this category</p>}
       </div>
     </div>
   )

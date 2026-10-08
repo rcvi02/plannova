@@ -36,7 +36,7 @@ export default function FocusTimerPage() {
   const prevTimeLeft = useRef(timeLeft)
   useEffect(() => {
     if (prevTimeLeft.current > 0 && timeLeft === 0 && mode === 'focus') {
-      toast.success('🎉 Focus session complete! Great work!')
+      toast.success('Focus session complete! Great work!')
       dispatch(addSession({
         subjectId: selectedSubjectId || null,
         date:      format(new Date(), 'yyyy-MM-dd'),
@@ -196,7 +196,7 @@ export default function FocusTimerPage() {
 
             {/* Sound toggle */}
             <button
-              onClick={() => { setSoundEnabled(!soundEnabled); toast(soundEnabled ? 'Sound off' : 'Sound on', { icon: soundEnabled ? '🔇' : '🔊' }) }}
+              onClick={() => { setSoundEnabled(!soundEnabled); toast(soundEnabled ? 'Sound off' : 'Sound on', { icon: soundEnabled ? 'Muted' : 'Sound' }) }}
               className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-sm transition-colors w-full justify-center"
               style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
             >

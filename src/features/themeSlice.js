@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const savedTheme = localStorage.getItem('studyflow-theme')
+const savedTheme = localStorage.getItem('plannova-theme')
 const initialState = {
-  mode: savedTheme || 'light', // 'light' | 'dark'
+  mode: savedTheme || 'system', // 'light' | 'dark' | 'system'
   sidebarCollapsed: false,
 }
 
@@ -12,8 +12,11 @@ const themeSlice = createSlice({
   reducers: {
     setTheme: (state, action) => {
       state.mode = action.payload
-      localStorage.setItem('studyflow-theme', action.payload)
-      const isDark = action.payload === 'dark'
+      localStorage.setItem('plannova-theme', action.payload)
+      let isDark = action.payload === 'dark'
+      if (action.payload === 'system') {
+        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      }
       document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
       if (isDark) {
         document.documentElement.classList.add('dark')

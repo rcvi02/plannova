@@ -1,16 +1,18 @@
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { format, subDays, parseISO } from 'date-fns'
 import {
   Clock, CheckCircle2, Flame, Target, AlertCircle, GraduationCap,
   Plus, Play, TrendingUp, BookOpen, BarChart3, Zap, ChevronRight,
-  Calendar, Activity, ArrowRight, Star, Brain
+  Calendar, Activity, ArrowRight, Star, Brain, Hand, Sun, Sparkles, Circle
 } from 'lucide-react'
+import { updateTask } from '@/features/tasksSlice'
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts'
+import IconRenderer from '@/components/ui/IconRenderer'
 import StatCard from '@/components/ui/StatCard'
 import { ChartCard } from '@/components/ui/StatCard'
 import ProgressRing from '@/components/ui/ProgressRing'
@@ -35,6 +37,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 }
 
 export default function Dashboard() {
+  const dispatch  = useDispatch()
   const user      = useSelector(s => s.auth.user)
   const tasks     = useSelector(s => s.tasks.items)
   const subjects  = useSelector(s => s.subjects.items)
@@ -43,7 +46,7 @@ export default function Dashboard() {
   const habits    = useSelector(s => s.habits.items)
   const goals     = useSelector(s => s.goals.items)
   const revisions = useSelector(s => s.revisions.items)
-
+  
   const today = format(new Date(), 'yyyy-MM-dd')
 
   const stats = useMemo(() => {
@@ -95,7 +98,7 @@ export default function Dashboard() {
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <motion.div variants={fadeUp}>
           <h1 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            {getGreeting()}, {user?.name?.split(' ')[0] || 'Student'} 👋
+            {getGreeting()}, {user?.name?.split(' ')[0] || 'Student'} <Sun size={20} className="inline ml-1" style={{ color: '#F59E0B' }} />
           </h1>
           <p className="text-xs sm:text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
             {format(new Date(), 'EEEE, MMMM d')} · {getMotivationalQuote()}
@@ -117,9 +120,12 @@ export default function Dashboard() {
           className="rounded-2xl p-5 sm:p-6"
           style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border)' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-            <div className="text-4xl">🎓</div>
+            <div className="text-4xl"><GraduationCap size={40} /></div>
             <div className="flex-1">
-              <h2 className="text-base font-bold mb-1" style={{ color: 'var(--text-primary)' }}>Welcome to StudyFlow!</h2>
+              <h2 className="text-base font-bold mb-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                Welcome to Plannova!
+                <Sparkles size={16} style={{ color: '#F59E0B' }} />
+              </h2>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Get started by adding your first subject, then plan tasks and track your focus sessions.</p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -157,7 +163,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* ─── Charts Row ─── */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Weekly Chart */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="xl:col-span-2">
           <ChartCard title="Weekly Study Hours" subtitle="Hours studied each day this week" action={
@@ -217,7 +223,7 @@ export default function Dashboard() {
       </div>
 
       {/* ─── Row 2: Tasks / Exams / Goals ─── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Today's Tasks */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <div className="rounded-2xl overflow-hidden h-full glass-surface stat-glow">
@@ -232,16 +238,21 @@ export default function Dashboard() {
             </div>
             <div className="p-2 space-y-0.5">
               {priorityTasks.length === 0 ? (
-                <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>No tasks due today 🎉</p>
+                <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>No tasks due today</p>
               ) : (
                 priorityTasks.map(task => {
                   const subject = getSubject(task.subjectId)
                   return (
-                    <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-colors cursor-pointer">
-                      <div className="w-3.5 h-3.5 rounded-full border-2 flex-shrink-0" style={{ borderColor: subject?.color || 'var(--border)' }} />
+                    <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[var(--bg-surface-2)] transition-colors group border border-transparent hover:border-[var(--border)]">
+                      <button 
+                        onClick={() => dispatch(updateTask({ id: task.id, data: { status: 'completed' } }))} 
+                        className="flex-shrink-0 transition-transform hover:scale-110"
+                      >
+                        <Circle size={18} style={{ color: subject?.color || 'var(--text-muted)' }} />
+                      </button>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{task.title}</p>
-                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{subject?.name}</p>
+                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{subject?.name || 'No subject'}</p>
                       </div>
                       <PriorityBadge priority={task.priority} />
                     </div>
@@ -295,7 +306,7 @@ export default function Dashboard() {
                 )
               })}
               {upcomingExams.length === 0 && (
-                <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>No upcoming exams 🙌</p>
+                <p className="text-sm text-center py-6" style={{ color: 'var(--text-muted)' }}>No upcoming exams</p>
               )}
             </div>
           </div>
@@ -349,8 +360,8 @@ export default function Dashboard() {
                   const pct = s.totalChapters > 0 ? Math.round((s.completedChapters / s.totalChapters) * 100) : 0
                   return (
                     <div key={s.id} className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ background: s.colorSoft || s.color + '18' }}>
-                        {s.icon}
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: s.colorSoft || s.color + '18', color: s.color }}>
+                        <IconRenderer name={s.icon} size={20} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
@@ -386,7 +397,7 @@ export default function Dashboard() {
                     return (
                       <div key={habit.id} className="flex items-center gap-3 p-2.5 rounded-xl">
                         <div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style={{ background: habit.color + '18' }}>
-                          {habit.icon}
+                          <IconRenderer name={habit.icon || 'Star'} size={14} />
                         </div>
                         <p className="text-sm flex-1" style={{ color: doneToday ? 'var(--text-muted)' : 'var(--text-primary)', textDecoration: doneToday ? 'line-through' : 'none' }}>
                           {habit.name}

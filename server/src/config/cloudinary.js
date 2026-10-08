@@ -12,7 +12,7 @@ export const uploadToCloudinary = (buffer, options = {}) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         resource_type: 'auto',
-        folder: 'studyflow',
+        folder: 'plannova',
         ...options,
       },
       (error, result) => {

@@ -8,6 +8,8 @@ import CommandPalette from '@/components/ui/CommandPalette'
 import MobileBottomNav from '@/components/layout/MobileBottomNav'
 import { toggleCommandPalette } from '@/features/uiSlice'
 
+import ProductTour from '@/components/ui/ProductTour'
+
 const pageVariants = {
   initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0 },
@@ -38,12 +40,14 @@ export default function AppLayout() {
   }, [dispatch])
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-page)' }}>
+    <div className="flex h-[100dvh] w-full max-w-[2000px] mx-auto overflow-hidden relative shadow-2xl" style={{ background: 'var(--bg-page)' }}>
+      <ProductTour />
+      
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main area */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden" id="main-content">
         <Navbar />
         <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <AnimatePresence mode="wait">

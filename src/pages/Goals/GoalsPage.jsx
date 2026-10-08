@@ -37,7 +37,7 @@ export default function GoalsPage() {
   const handleSave = () => {
     if (!form.title.trim()) return toast.error('Goal title is required')
     dispatch(addGoal(form))
-    toast.success('Goal added! 🎯')
+    toast.success('Goal added!')
     setShowModal(false)
     setForm({ title: '', type: 'weekly', target: 100, current: 0, unit: '%', deadline: fmt(new Date(), 'yyyy-MM-dd'), priority: 'high' })
   }
@@ -45,7 +45,7 @@ export default function GoalsPage() {
   const handleProgressUpdate = (id, current, target) => {
     dispatch(updateGoalProgress({ id, current: Math.min(current, target) }))
     if (current >= target) {
-      toast.success('🎉 Goal completed!')
+      toast.success('Goal completed!')
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } })
     }
   }
@@ -157,7 +157,7 @@ function GoalCard({ goal, index, dispatch, onProgressUpdate, isCompleted }) {
           <span className="text-xs font-semibold px-2 py-0.5 rounded-full capitalize" style={{ background: cfg.soft, color: cfg.color }}>{goal.type}</span>
           <h3 className="text-sm font-bold mt-2" style={{ color: 'var(--text-primary)' }}>{goal.title}</h3>
           {goal.deadline && <p className="text-xs mt-1" style={{ color: isExpired ? 'var(--danger)' : 'var(--text-muted)' }}>
-            {isExpired ? '⚠ Overdue · ' : ''}Due {format(parseISO(goal.deadline), 'MMM d')}
+            {isExpired ? 'Overdue · ' : ''}Due {format(parseISO(goal.deadline), 'MMM d')}
           </p>}
         </div>
         <div className="flex items-center gap-1">

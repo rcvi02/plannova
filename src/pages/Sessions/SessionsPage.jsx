@@ -6,6 +6,7 @@ import { Plus, Edit2, Trash2, Clock, Star, History } from 'lucide-react'
 import { addSession, updateSession, deleteSession } from '@/features/sessionsSlice'
 import { EmptyState } from '@/components/ui/EmptyState'
 import Modal from '@/components/ui/Modal'
+import IconRenderer from '@/components/ui/IconRenderer'
 import Button from '@/components/ui/Button'
 import { formatMinutes } from '@/utils/helpers'
 import toast from 'react-hot-toast'
@@ -92,7 +93,7 @@ export default function SessionsPage() {
                       className="flex items-center gap-4 p-4 rounded-2xl hover:bg-[var(--bg-hover)] transition-colors group"
                       style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: sub?.colorSoft || 'var(--accent-soft)' }}>
-                        <span className="text-xl">{sub?.icon || '📚'}</span>
+                        <IconRenderer name={sub?.icon || 'BookOpen'} size={24} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{sub?.name || 'General Study'}</p>

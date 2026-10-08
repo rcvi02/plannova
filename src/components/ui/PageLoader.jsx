@@ -34,28 +34,5 @@ export function TaskSkeleton() {
   )
 }
 
-export function PageLoader() {
-  return (
-    <div className="flex items-center justify-center h-screen" style={{ background: 'var(--bg-page)' }}>
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--text-primary)' }}>
-          <Zap size={20} style={{ color: 'var(--bg-page)' }} className="animate-pulse" />
-        </div>
-        <div className="flex gap-1.5">
-          {[0, 1, 2].map(i => (
-            <div
-              key={i}
-              className="w-1.5 h-1.5 rounded-full"
-              style={{
-                background: 'var(--accent)',
-                animation: `pulseSubtle 1.4s ease-in-out ${i * 0.2}s infinite`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default PageLoader
+export { ThemeLoader as PageLoader } from './Loader'
+export { ThemeLoader as default } from './Loader'

@@ -133,9 +133,9 @@ export default function NotesPage() {
   const getSubject = id => subjects.find(s => s.id === id)
 
   return (
-    <div className="flex h-full overflow-hidden pb-16 lg:pb-0">
+    <div className="flex flex-col md:flex-row h-full overflow-hidden pb-16 lg:pb-0">
       {/* Left Sidebar */}
-      <div className="w-72 flex-shrink-0 flex flex-col border-r" style={{ borderColor: 'var(--border)', background: 'var(--bg-surface)' }}>
+      <div className="w-full md:w-72 h-[45%] md:h-full flex-shrink-0 flex flex-col border-b md:border-b-0 md:border-r" style={{ borderColor: 'var(--border)', background: 'var(--bg-surface)' }}>
         {/* Header */}
         <div className="p-4 flex-shrink-0">
           <div className="flex items-center justify-between mb-3">
@@ -197,15 +197,15 @@ export default function NotesPage() {
         {selectedNote ? (
           <>
             {/* Note Header */}
-            <div className="flex items-center gap-3 px-6 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 sm:px-6 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
               <input
                 value={selectedNote.title}
                 onChange={handleTitleEdit}
-                className="flex-1 text-xl font-bold bg-transparent outline-none"
+                className="w-full sm:flex-1 text-xl font-bold bg-transparent outline-none"
                 style={{ color: 'var(--text-primary)' }}
                 placeholder="Note title..."
               />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
                 {autosaveIndicator && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
                 <button onClick={() => dispatch(togglePin(selectedNote.id))} className="p-1.5 rounded-lg" style={{ color: selectedNote.pinned ? 'var(--accent)' : 'var(--text-muted)', background: selectedNote.pinned ? 'var(--accent-soft)' : 'transparent' }}>
                   <Pin size={14} />

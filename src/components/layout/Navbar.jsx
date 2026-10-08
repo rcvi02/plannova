@@ -42,7 +42,7 @@ export default function Navbar() {
   const themeRef = useRef(null)
   const notifRef = useRef(null)
 
-  const pageTitle = PAGE_TITLES[location.pathname] || location.pathname.split('/').pop() || 'StudyFlow'
+  const pageTitle = PAGE_TITLES[location.pathname] || location.pathname.split('/').pop() || 'Plannova'
   const unreadCount = notifications.filter(n => !n.read).length
 
   // Close dropdowns on outside click
@@ -66,7 +66,7 @@ export default function Navbar() {
 
   return (
     <header
-      className="flex items-center gap-3 px-4 flex-shrink-0 lg:pl-6 pl-14 navbar-glass"
+      className="flex items-center gap-3 px-4 lg:px-6 2xl:px-10 flex-shrink-0 navbar-glass"
       style={{
         height: 60,
         position: 'sticky',
@@ -83,12 +83,13 @@ export default function Navbar() {
       </div>
 
       {/* Mobile page title */}
-      <div className="lg:hidden font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
+      <div className="lg:hidden font-bold text-sm ml-10 truncate max-w-[120px] sm:max-w-none" style={{ color: 'var(--text-primary)' }}>
         {pageTitle}
       </div>
 
       {/* Search Bar */}
       <button
+        id="command-palette-btn"
         onClick={() => dispatch(setCommandPalette(true))}
         className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all flex-1 max-w-sm text-left"
         style={{
@@ -99,8 +100,8 @@ export default function Navbar() {
         }}
         aria-label="Open command palette"
       >
-        <Search size={14} />
-        <span className="hidden sm:block flex-1">Search anything...</span>
+        <Search size={14} className="flex-shrink-0" />
+        <span className="hidden sm:block flex-1 truncate">Search anything...</span>
         <div className="ml-auto hidden md:flex items-center gap-1">
           <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono" style={{ background: 'var(--bg-surface-3)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
             ⌘K
@@ -109,11 +110,26 @@ export default function Navbar() {
       </button>
 
       <div className="flex items-center gap-1 ml-auto">
+        {/* Help / Tour */}
+        <button
+          onClick={() => {
+            localStorage.removeItem('plannova-tour-seen')
+            sessionStorage.setItem('plannova-new-user', 'true')
+            window.location.reload()
+          }}
+          className="p-2 rounded-xl transition-colors flex-shrink-0"
+          style={{ color: 'var(--text-secondary)' }}
+          aria-label="Start Product Tour"
+          title="Start Tour"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </button>
+
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setNotifOpen(!notifOpen)}
-            className="relative p-2 rounded-xl transition-colors"
+            className="relative p-2 rounded-xl transition-colors flex-shrink-0"
             style={{ color: 'var(--text-secondary)', background: notifOpen ? 'var(--bg-hover)' : 'transparent' }}
             aria-label="Notifications"
           >
@@ -164,8 +180,9 @@ export default function Navbar() {
         {/* Theme Toggle */}
         <div className="relative" ref={themeRef}>
           <button
+            id="theme-toggle-btn"
             onClick={() => setThemeOpen(!themeOpen)}
-            className="p-2 rounded-xl transition-colors"
+            className="p-2 rounded-xl transition-colors flex-shrink-0"
             style={{ color: 'var(--text-secondary)', background: themeOpen ? 'var(--bg-hover)' : 'transparent' }}
             aria-label="Change theme"
           >
@@ -204,6 +221,7 @@ export default function Navbar() {
         {/* Profile */}
         <div className="relative" ref={profileRef}>
           <button
+            id="profile-menu-btn"
             onClick={() => setProfileOpen(!profileOpen)}
             className="flex items-center gap-2 p-1.5 pr-2.5 rounded-xl transition-colors"
             style={{ background: profileOpen ? 'var(--bg-hover)' : 'transparent' }}

@@ -9,7 +9,7 @@ const startServer = async () => {
   await connectDB()
 
   const server = app.listen(PORT, () => {
-    console.log(`\n🚀 StudyFlow API running on port ${PORT}`)
+    console.log(`\n🚀 Plannova API running on port ${PORT}`)
     console.log(`📍 Environment: ${process.env.NODE_ENV}`)
     console.log(`🌍 Client URL: ${process.env.CLIENT_URL}`)
     console.log(`\n📋 API Routes:`)

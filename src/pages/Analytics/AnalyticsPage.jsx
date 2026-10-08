@@ -9,6 +9,7 @@ import {
 import { ChartCard } from '@/components/ui/StatCard'
 import StatCard from '@/components/ui/StatCard'
 import { Clock, CheckCircle2, Flame, TrendingUp, BarChart3, Brain, Target, Activity } from 'lucide-react'
+import IconRenderer from '@/components/ui/IconRenderer'
 import { formatMinutes } from '@/utils/helpers'
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -147,7 +148,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 2xl:gap-8">
         <ChartCard title="Subject Distribution" subtitle="Hours by subject" className="lg:col-span-1">
           <div className="flex flex-col gap-3 mt-2">
             {subjectData.map(s => (
@@ -184,14 +185,14 @@ export default function AnalyticsPage() {
         <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-secondary)' }}>Smart Insights</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-        { icon: '📅', title: 'Best Study Day', value: bestDay?.day || '—', desc: `${bestDay?.hours || 0}h on average` },
-            { icon: '📚', title: 'Most Studied', value: mostStudied?.name || '—', desc: `${mostStudied?.hours || 0}h total` },
-            { icon: '🔥', title: 'Total Streak Points', value: `${habitStreaks}d`, desc: 'Combined habit streaks' },
-            { icon: '✅', title: 'Completion Rate', value: `${totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%`, desc: `${completedTasks}/${totalTasks} tasks` },
+            { icon: 'Calendar', title: 'Best Study Day', value: bestDay?.day || '—', desc: `${bestDay?.hours || 0}h on average` },
+            { icon: 'BookOpen', title: 'Most Studied', value: mostStudied?.name || '—', desc: `${mostStudied?.hours || 0}h total` },
+            { icon: 'Flame', title: 'Total Streak Points', value: `${habitStreaks}d`, desc: 'Combined habit streaks' },
+            { icon: 'CheckSquare', title: 'Completion Rate', value: `${totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%`, desc: `${completedTasks}/${totalTasks} tasks` },
           ].map((insight, i) => (
             <motion.div key={insight.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
               className="rounded-2xl p-4" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-              <div className="text-2xl mb-2">{insight.icon}</div>
+              <div className="mb-2" style={{ color: 'var(--accent)' }}><IconRenderer name={insight.icon} size={24} /></div>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{insight.title}</p>
               <p className="text-lg font-bold mt-0.5" style={{ color: 'var(--text-primary)' }}>{insight.value}</p>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{insight.desc}</p>

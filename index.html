@@ -2,19 +2,19 @@
 <html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="StudyFlow — Plan smarter. Focus deeper. Achieve more. The premium study planner for ambitious students." />
+    <meta name="description" content="Plannova — Plan smarter. Focus deeper. Achieve more. The premium study planner for ambitious students." />
     <meta name="theme-color" content="#7c3aed" />
-    <title>StudyFlow — Premium Study Planner</title>
+    <title>Plannova — Premium Study Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
     <script>
       // Prevent theme flash before React mounts
       (function() {
         try {
-          var stored = localStorage.getItem('studyflow-theme');
+          var stored = localStorage.getItem('plannova-theme');
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           var theme = stored === 'dark' || stored === 'light' ? stored : (stored === 'system' || !stored) ? (prefersDark ? 'dark' : 'light') : 'light';
           document.documentElement.setAttribute('data-theme', theme);

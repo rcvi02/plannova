@@ -92,7 +92,7 @@ export default function TodayPage() {
             </div>
             <div className="p-2 space-y-1">
               {pending.length === 0 ? (
-                <p className="text-sm text-center py-8" style={{ color: 'var(--text-muted)' }}>All done! 🎉</p>
+                <p className="text-sm text-center py-8" style={{ color: 'var(--text-muted)' }}>All done!</p>
               ) : (
                 pending.map(task => {
                   const subject = getSubject(task.subjectId)
@@ -145,7 +145,7 @@ export default function TodayPage() {
                 <ExternalLink size={13} style={{ color: 'var(--text-muted)' }} />
               </div>
               <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                {timer.isRunning ? '🔴 Session in progress' : 'Start a Pomodoro session'}
+                {timer.isRunning ? 'Session in progress' : 'Start a Pomodoro session'}
               </p>
               <div className="text-3xl font-mono font-bold text-center mb-4" style={{ color: 'var(--accent)' }}>
                 {formatSeconds(timer.timeLeft)}

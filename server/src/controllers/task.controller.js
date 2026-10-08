@@ -58,6 +58,12 @@ export const getTask = asyncHandler(async (req, res) => {
 
 // PUT /api/tasks/:id
 export const updateTask = asyncHandler(async (req, res) => {
+  if (req.body.status === 'completed') {
+    req.body.completedAt = new Date()
+  } else if (req.body.status && req.body.status !== 'completed') {
+    req.body.completedAt = null
+  }
+
   const task = await Task.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
     req.body,

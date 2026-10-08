@@ -7,7 +7,7 @@ import StudySession from './src/models/StudySession.js';
 import Habit from './src/models/Habit.js';
 import Goal from './src/models/Goal.js';
 
-const MONGODB_URI = 'mongodb://localhost:27017/studyflow';
+const MONGODB_URI = 'mongodb://localhost:27017/plannova';
 
 async function seed() {
   try {
@@ -15,10 +15,10 @@ async function seed() {
     console.log('Connected to MongoDB');
 
     // 1. Create Demo User
-    await User.deleteOne({ email: 'demo@studyflow.com' });
+    await User.deleteOne({ email: 'demo@plannova.com' });
     const user = new User({
       name: 'Demo User',
-      email: 'demo@studyflow.com',
+      email: 'demo@plannova.com',
       password: 'password123',
       course: 'B.Tech Computer Science',
       college: 'MIT',
@@ -31,9 +31,9 @@ async function seed() {
 
     // 2. Create Subjects
     await Subject.deleteMany({ user: user._id });
-    const s1 = await Subject.create({ user: user._id, name: 'Data Structures', color: '#0EA5E9', icon: '💾', currentGrade: 'A', targetGrade: 'A+' });
-    const s2 = await Subject.create({ user: user._id, name: 'Algorithms', color: '#10B981', icon: '💻', currentGrade: 'B+', targetGrade: 'A' });
-    const s3 = await Subject.create({ user: user._id, name: 'Machine Learning', color: '#8B5CF6', icon: '🧠', currentGrade: 'A', targetGrade: 'A+' });
+    const s1 = await Subject.create({ user: user._id, name: 'Data Structures', color: '#0EA5E9', icon: 'Database', currentGrade: 'A', targetGrade: 'A+' });
+    const s2 = await Subject.create({ user: user._id, name: 'Algorithms', color: '#10B981', icon: 'Code', currentGrade: 'B+', targetGrade: 'A' });
+    const s3 = await Subject.create({ user: user._id, name: 'Machine Learning', color: '#8B5CF6', icon: 'Brain', currentGrade: 'A', targetGrade: 'A+' });
 
     // 3. Create Tasks
     await Task.deleteMany({ user: user._id });

@@ -15,7 +15,7 @@ export const uploadProfileImage = asyncHandler(async (req, res) => {
   if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
     try {
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: 'studyflow/profiles',
+        folder: 'plannova/profiles',
         transformation: [{ width: 400, height: 400, crop: 'fill', gravity: 'face' }],
       })
       imageUrl = result.secure_url
@@ -52,7 +52,7 @@ export const uploadNoteAttachment = asyncHandler(async (req, res) => {
 
     if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
       try {
-        const result = await uploadToCloudinary(file.buffer, { folder: 'studyflow/attachments' })
+        const result = await uploadToCloudinary(file.buffer, { folder: 'plannova/attachments' })
         url = result.secure_url
         publicId = result.public_id
       } catch (err) {

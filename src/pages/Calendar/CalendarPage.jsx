@@ -38,7 +38,7 @@ export default function CalendarPage() {
       const sub = getSubject(e.subjectId)
       evts.push({
         id: `exam-${e.id}`,
-        title: `📝 ${e.name}`,
+        title: `${e.name}`,
         date: e.date,
         backgroundColor: '#F43F5E',
         borderColor: 'transparent',
@@ -51,7 +51,7 @@ export default function CalendarPage() {
       const sub = getSubject(r.subjectId)
       evts.push({
         id: `rev-${r.id}`,
-        title: `🔄 ${r.topic}`,
+        title: `${r.topic}`,
         date: r.dueDate,
         backgroundColor: '#F59E0B',
         borderColor: 'transparent',

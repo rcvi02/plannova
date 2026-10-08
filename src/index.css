@@ -1,4 +1,4 @@
-/* ─── StudyFlow Global Reset ─────────────────────────────────────
+/* ─── Plannova Global Reset ─────────────────────────────────────
    This file intentionally minimal — all design tokens and utilities
    live in src/styles/index.css which is imported in main.jsx.
    The old Vite default (#root { width: 1126px }) was breaking the

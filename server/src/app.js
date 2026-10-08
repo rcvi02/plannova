@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import mongoSanitize from 'express-mongo-sanitize'
 import { apiLimiter } from './middleware/rateLimiter.js'
 import errorHandler from './middleware/errorHandler.js'
@@ -20,6 +22,9 @@ import notificationRoutes from './routes/notification.routes.js'
 import miscRoutes from './routes/misc.routes.js'
 
 const app = express()
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // ─── Security ───────────────────────────────────────────────────────────────
 app.use(helmet({
@@ -57,7 +62,7 @@ app.use('/api', apiLimiter)
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'StudyFlow API is running',
+    message: 'Plannova API is running',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
     version: '1.0.0',
@@ -77,10 +82,24 @@ app.use('/api/habits', habitRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api', miscRoutes) // dashboard, analytics, search, uploads
 
-// ─── 404 handler ─────────────────────────────────────────────────────────────
-app.use((req, res) => {
+// ─── API 404 handler ─────────────────────────────────────────────────────────────
+app.use('/api/*', (req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.method} ${req.originalUrl} not found.` })
 })
+
+// ─── Serve React Frontend in Production ───────────────────────────────────────
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../../../dist')
+  app.use(express.static(distPath))
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(distPath, 'index.html'))
+  })
+} else {
+  app.use((req, res) => {
+    res.status(404).json({ success: false, message: `Route ${req.method} ${req.originalUrl} not found.` })
+  })
+}
 
 // ─── Global error handler ────────────────────────────────────────────────────
 app.use(errorHandler)

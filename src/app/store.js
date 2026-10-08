@@ -24,7 +24,7 @@ const localStorageAdapter = {
 }
 
 const persistConfig = {
-  key: 'studyflow-root',
+  key: 'plannova-root',
   storage: localStorageAdapter,
   whitelist: ['auth', 'tasks', 'subjects', 'exams', 'sessions', 'habits', 'goals', 'notes', 'revisions', 'theme', 'timer'],
 }

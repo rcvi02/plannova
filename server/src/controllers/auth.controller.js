@@ -28,14 +28,14 @@ export const register = asyncHandler(async (req, res) => {
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`
   sendEmail({
     to: email,
-    subject: 'Verify your StudyFlow account',
+    subject: 'Verify your Plannova account',
     html: `<p>Hi ${name},</p><p>Please <a href="${verifyUrl}">verify your email</a>. Link expires in 24 hours.</p>`,
   }).catch(console.error)
 
   const token = generateAccessToken(user._id)
 
   return sendSuccess(res, {
-    message: 'Account created successfully! Welcome to StudyFlow.',
+    message: 'Account created successfully! Welcome to Plannova.',
     data: { token, user: user.toPublicJSON() },
     statusCode: 201,
   })

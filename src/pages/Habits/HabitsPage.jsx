@@ -7,9 +7,10 @@ import { toggleHabitToday, addHabit, deleteHabit, archiveHabit } from '@/feature
 import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import IconRenderer from '@/components/ui/IconRenderer'
 import toast from 'react-hot-toast'
 
-const HABIT_ICONS = ['🌅', '📖', '🧮', '📝', '🏃', '💧', '🧘', '🎯', '💻', '🍎', '🌙', '✍️']
+const HABIT_ICONS = ['Sun', 'Book', 'Calculator', 'FileText', 'Activity', 'Droplets', 'Wind', 'Target', 'Code', 'Apple', 'Moon', 'PenTool']
 
 // Heatmap for last 52 weeks (364 days)
 function HabitHeatmap({ completedDates }) {
@@ -35,16 +36,16 @@ export default function HabitsPage() {
   const habits = useSelector(s => s.habits.items).filter(h => !h.archived)
   const [showModal, setShowModal] = useState(false)
   const [expandedId, setExpandedId] = useState(null)
-  const [form, setForm] = useState({ name: '', icon: '🌅', color: '#7C3AED', frequency: 'daily' })
+  const [form, setForm] = useState({ name: '', icon: 'Sun', color: '#7C3AED', frequency: 'daily' })
 
   const today = format(new Date(), 'yyyy-MM-dd')
 
   const handleAdd = () => {
     if (!form.name.trim()) return toast.error('Habit name is required')
     dispatch(addHabit(form))
-    toast.success('Habit added! Start your streak today 🔥')
+    toast.success('Habit added! Start your streak today')
     setShowModal(false)
-    setForm({ name: '', icon: '🌅', color: '#7C3AED', frequency: 'daily' })
+    setForm({ name: '', icon: 'Sun', color: '#7C3AED', frequency: 'daily' })
   }
 
   const handleToggle = (id) => {
@@ -93,8 +94,8 @@ export default function HabitsPage() {
               <motion.div key={habit.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                 <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-surface)', border: `2px solid ${doneToday ? habit.color + '40' : 'var(--border)'}` }}>
                   <div className="flex items-center gap-4 p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : habit.id)}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0" style={{ background: habit.color + '18' }}>
-                      {habit.icon}
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: habit.color + '18', color: habit.color }}>
+                      <IconRenderer name={habit.icon} size={20} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{habit.name}</p>
@@ -155,9 +156,9 @@ export default function HabitsPage() {
             <label className="text-sm font-medium mb-2 block" style={{ color: 'var(--text-primary)' }}>Icon</label>
             <div className="flex flex-wrap gap-2">
               {HABIT_ICONS.map(icon => (
-                <button key={icon} onClick={() => setForm(f => ({ ...f, icon }))} className="w-9 h-9 rounded-lg text-xl flex items-center justify-center"
-                  style={{ background: form.icon === icon ? 'var(--accent-soft)' : 'var(--bg-surface-2)', border: form.icon === icon ? '2px solid var(--accent)' : '1px solid var(--border)' }}>
-                  {icon}
+                <button key={icon} onClick={() => setForm(f => ({ ...f, icon }))} className="w-9 h-9 rounded-lg flex items-center justify-center"
+                  style={{ background: form.icon === icon ? 'var(--accent-soft)' : 'var(--bg-surface-2)', border: form.icon === icon ? '2px solid var(--accent)' : '1px solid var(--border)', color: form.icon === icon ? 'var(--accent)' : 'var(--text-secondary)' }}>
+                  <IconRenderer name={icon} size={18} />
                 </button>
               ))}
             </div>

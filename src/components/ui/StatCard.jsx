@@ -9,7 +9,7 @@ export default function StatCard({ label, value, icon: Icon, iconColor, trend, t
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
       transition={{ delay, duration: 0.22 }}
-      className={cn('rounded-2xl p-4 glass-surface stat-glow flex flex-col justify-between cursor-default relative overflow-hidden', className)}
+      className={cn('rounded-2xl p-3 sm:p-4 glass-surface stat-glow flex flex-col justify-between cursor-default relative overflow-hidden', className)}
     >
       {/* Subtle background accent and watermark icon */}
       {iconColor && (
@@ -45,7 +45,7 @@ export default function StatCard({ label, value, icon: Icon, iconColor, trend, t
 
       <div className="relative">
         <div className="flex items-end gap-2">
-          <span className="text-xl font-black leading-none" style={{ color: 'var(--text-primary)' }}>
+          <span className="text-lg sm:text-xl font-black leading-none" style={{ color: 'var(--text-primary)' }}>
             {value}
           </span>
           {trend !== undefined && (

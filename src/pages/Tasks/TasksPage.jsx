@@ -71,12 +71,12 @@ export default function TasksPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Tasks</h1>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{tasks.filter(t => t.status !== 'completed').length} pending · {tasks.filter(t => t.status === 'completed').length} completed</p>
         </div>
-        <Button onClick={() => { setEditTask(null); setShowModal(true) }} icon={Plus}>Add Task</Button>
+        <Button onClick={() => { setEditTask(null); setShowModal(true) }} icon={Plus} className="w-full sm:w-auto">Add Task</Button>
       </div>
 
       {/* Tabs */}
@@ -92,25 +92,27 @@ export default function TasksPage() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 mb-5">
-        <div className="relative flex-1 min-w-48">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-5">
+        <div className="relative w-full sm:flex-1 sm:min-w-[12rem]">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tasks..."
             className="w-full pl-9 pr-3 py-2 text-sm rounded-xl input-focus" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }} />
         </div>
-        <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="px-3 py-2 text-sm rounded-xl cursor-pointer" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}>
-          <option value="all">All Priorities</option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-        <select value={filterSubject} onChange={e => setFilterSubject(e.target.value)} className="px-3 py-2 text-sm rounded-xl cursor-pointer" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}>
-          <option value="all">All Subjects</option>
-          {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-        </select>
-        <div className="flex rounded-xl overflow-hidden border ml-auto" style={{ borderColor: 'var(--border)' }}>
-          <button onClick={() => setView('list')} className="p-2" style={{ background: view === 'list' ? 'var(--accent-soft)' : 'var(--bg-surface)', color: view === 'list' ? 'var(--accent)' : 'var(--text-muted)' }}><List size={16} /></button>
-          <button onClick={() => setView('board')} className="p-2" style={{ background: view === 'board' ? 'var(--accent-soft)' : 'var(--bg-surface)', color: view === 'board' ? 'var(--accent)' : 'var(--text-muted)' }}><LayoutGrid size={16} /></button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl cursor-pointer" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}>
+            <option value="all">All Priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select value={filterSubject} onChange={e => setFilterSubject(e.target.value)} className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl cursor-pointer" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}>
+            <option value="all">All Subjects</option>
+            {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+        </div>
+        <div className="flex rounded-xl overflow-hidden border w-full sm:w-auto" style={{ borderColor: 'var(--border)' }}>
+          <button onClick={() => setView('list')} className="flex-1 sm:flex-none p-2 flex justify-center" style={{ background: view === 'list' ? 'var(--accent-soft)' : 'var(--bg-surface)', color: view === 'list' ? 'var(--accent)' : 'var(--text-muted)' }}><List size={16} /></button>
+          <button onClick={() => setView('board')} className="flex-1 sm:flex-none p-2 flex justify-center" style={{ background: view === 'board' ? 'var(--accent-soft)' : 'var(--bg-surface)', color: view === 'board' ? 'var(--accent)' : 'var(--text-muted)' }}><LayoutGrid size={16} /></button>
         </div>
       </div>
 
@@ -156,25 +158,31 @@ export default function TasksPage() {
               const sub = getSubject(task.subjectId)
               return (
                 <motion.div key={task.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                  className="flex items-center gap-3 p-4 rounded-xl hover:bg-[var(--bg-hover)] transition-colors group"
+                  className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl hover:bg-[var(--bg-hover)] transition-colors group"
                   style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-                  <button onClick={() => { dispatch(updateTask({ id: task.id, data: { status: task.status === 'completed' ? 'pending' : 'completed' } })); toast.success(task.status === 'completed' ? 'Task reopened' : 'Task completed! 🎉') }} className="flex-shrink-0">
-                    {task.status === 'completed'
-                      ? <CheckCircle2 size={20} style={{ color: 'var(--success)' }} />
-                      : <Circle size={20} style={{ color: sub?.color || 'var(--border)' }} />}
-                  </button>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)', textDecoration: task.status === 'completed' ? 'line-through' : 'none', opacity: task.status === 'completed' ? 0.6 : 1 }}>{task.title}</p>
-                    <div className="flex items-center gap-3 mt-0.5">
-                      {sub && <span className="text-xs" style={{ color: sub.color }}>● {sub.name}</span>}
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{task.dueDate}</span>
-                      {task.estimatedTime && <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatMinutes(task.estimatedTime)}</span>}
+                  
+                  <div className="flex items-start sm:items-center gap-3 w-full sm:flex-1 min-w-0">
+                    <button onClick={() => { dispatch(updateTask({ id: task.id, data: { status: task.status === 'completed' ? 'pending' : 'completed' } })); toast.success(task.status === 'completed' ? 'Task reopened' : 'Task completed!') }} className="flex-shrink-0 mt-0.5 sm:mt-0">
+                      {task.status === 'completed'
+                        ? <CheckCircle2 size={20} style={{ color: 'var(--success)' }} />
+                        : <Circle size={20} style={{ color: sub?.color || 'var(--border)' }} />}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)', textDecoration: task.status === 'completed' ? 'line-through' : 'none', opacity: task.status === 'completed' ? 0.6 : 1, wordBreak: 'break-word' }}>{task.title}</p>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                        {sub && <span className="text-xs truncate max-w-[120px]" style={{ color: sub.color }}>● {sub.name}</span>}
+                        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{task.dueDate}</span>
+                        {task.estimatedTime && <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{formatMinutes(task.estimatedTime)}</span>}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <PriorityBadge priority={task.priority} />
-                    <StatusBadge status={task.status} />
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pl-8 sm:pl-0 mt-2 sm:mt-0">
+                    <div className="flex items-center gap-2">
+                      <PriorityBadge priority={task.priority} />
+                      <StatusBadge status={task.status} />
+                    </div>
+                    <div className="flex gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => handleEdit(task)} className="p-1.5 rounded-lg" style={{ color: 'var(--text-muted)' }}
                         onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>

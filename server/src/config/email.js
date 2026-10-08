@@ -26,7 +26,7 @@ export const sendEmail = async ({ to, subject, html }) => {
     return { messageId: 'mock-id' }
   }
   const mailOptions = {
-    from: process.env.EMAIL_FROM || 'StudyFlow <noreply@studyflow.app>',
+    from: process.env.EMAIL_FROM || 'Plannova <noreply@plannova.app>',
     to,
     subject,
     html,

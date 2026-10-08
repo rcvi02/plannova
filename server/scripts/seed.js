@@ -20,7 +20,7 @@ const todayStr = format(today, 'yyyy-MM-dd')
 
 const seedDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/studyflow'
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/plannova'
     await mongoose.connect(mongoUri)
     console.log('MongoDB connected')
 
@@ -39,7 +39,7 @@ const seedDB = async () => {
     // 1. Create User
     const user = await User.create({
       name: 'Alex Chen',
-      email: 'alex@studyflow.app',
+      email: 'alex@plannova.app',
       password: 'password123', // Will be hashed by model pre-save hook
       course: 'B.Tech Computer Science',
       college: 'IIT Delhi',

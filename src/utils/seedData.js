@@ -17,12 +17,12 @@ export const SUBJECT_COLORS = [
 ]
 
 export const seedSubjects = [
-  { id: 's1', name: 'Mathematics', icon: '📐', color: '#7C3AED', colorSoft: '#EDE9FE', totalChapters: 12, completedChapters: 8, studyHours: 42, priority: 'high', description: 'Calculus, Algebra, Statistics' },
-  { id: 's2', name: 'Physics', icon: '⚛️', color: '#0EA5E9', colorSoft: '#E0F2FE', totalChapters: 10, completedChapters: 6, studyHours: 35, priority: 'high', description: 'Mechanics, Thermodynamics, Optics' },
-  { id: 's3', name: 'Chemistry', icon: '🧪', color: '#10B981', colorSoft: '#D1FAE5', totalChapters: 14, completedChapters: 9, studyHours: 28, priority: 'medium', description: 'Organic, Inorganic, Physical Chemistry' },
-  { id: 's4', name: 'Biology', icon: '🔬', color: '#F59E0B', colorSoft: '#FEF3C7', totalChapters: 16, completedChapters: 12, studyHours: 22, priority: 'medium', description: 'Cell Biology, Genetics, Ecology' },
-  { id: 's5', name: 'English', icon: '📚', color: '#F43F5E', colorSoft: '#FFE4E6', totalChapters: 8, completedChapters: 7, studyHours: 18, priority: 'low', description: 'Literature, Grammar, Writing' },
-  { id: 's6', name: 'Computer Science', icon: '💻', color: '#8B5CF6', colorSoft: '#EDE9FE', totalChapters: 11, completedChapters: 5, studyHours: 31, priority: 'high', description: 'DSA, DBMS, Networking, OS' },
+  { id: 's1', name: 'Mathematics', icon: 'Calculator', color: '#7C3AED', colorSoft: '#EDE9FE', totalChapters: 12, completedChapters: 8, studyHours: 42, priority: 'high', description: 'Calculus, Algebra, Statistics' },
+  { id: 's2', name: 'Physics', icon: 'Atom', color: '#0EA5E9', colorSoft: '#E0F2FE', totalChapters: 10, completedChapters: 6, studyHours: 35, priority: 'high', description: 'Mechanics, Thermodynamics, Optics' },
+  { id: 's3', name: 'Chemistry', icon: 'FlaskConical', color: '#10B981', colorSoft: '#D1FAE5', totalChapters: 14, completedChapters: 9, studyHours: 28, priority: 'medium', description: 'Organic, Inorganic, Physical Chemistry' },
+  { id: 's4', name: 'Biology', icon: 'Microscope', color: '#F59E0B', colorSoft: '#FEF3C7', totalChapters: 16, completedChapters: 12, studyHours: 22, priority: 'medium', description: 'Cell Biology, Genetics, Ecology' },
+  { id: 's5', name: 'English', icon: 'BookOpen', color: '#F43F5E', colorSoft: '#FFE4E6', totalChapters: 8, completedChapters: 7, studyHours: 18, priority: 'low', description: 'Literature, Grammar, Writing' },
+  { id: 's6', name: 'Computer Science', icon: 'Code', color: '#8B5CF6', colorSoft: '#EDE9FE', totalChapters: 11, completedChapters: 5, studyHours: 31, priority: 'high', description: 'DSA, DBMS, Networking, OS' },
 ]
 
 export const seedTasks = [
@@ -56,11 +56,11 @@ export const seedSessions = Array.from({ length: 14 }, (_, i) => ({
 }))
 
 export const seedHabits = [
-  { id: 'h1', name: 'Morning Study Session', icon: '🌅', color: '#7C3AED', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], streak: 7, longestStreak: 14, completedDates: Array.from({ length: 7 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
-  { id: 'h2', name: 'Read 30 minutes', icon: '📖', color: '#0EA5E9', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri'], streak: 5, longestStreak: 21, completedDates: Array.from({ length: 5 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
-  { id: 'h3', name: 'Solve 10 problems', icon: '🧮', color: '#10B981', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], streak: 3, longestStreak: 10, completedDates: Array.from({ length: 3 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
-  { id: 'h4', name: 'Review notes', icon: '📝', color: '#F59E0B', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri'], streak: 4, longestStreak: 8, completedDates: Array.from({ length: 4 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
-  { id: 'h5', name: 'Exercise', icon: '🏃', color: '#F43F5E', frequency: 'daily', targetDays: ['mon', 'wed', 'fri', 'sun'], streak: 2, longestStreak: 12, completedDates: Array.from({ length: 2 }, (_, i) => format(subDays(today, i * 2), 'yyyy-MM-dd')) },
+  { id: 'h1', name: 'Morning Study Session', icon: 'Sun', color: '#7C3AED', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], streak: 7, longestStreak: 14, completedDates: Array.from({ length: 7 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
+  { id: 'h2', name: 'Read 30 minutes', icon: 'Book', color: '#0EA5E9', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri'], streak: 5, longestStreak: 21, completedDates: Array.from({ length: 5 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
+  { id: 'h3', name: 'Solve 10 problems', icon: 'Calculator', color: '#10B981', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], streak: 3, longestStreak: 10, completedDates: Array.from({ length: 3 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
+  { id: 'h4', name: 'Review notes', icon: 'FileText', color: '#F59E0B', frequency: 'daily', targetDays: ['mon', 'tue', 'wed', 'thu', 'fri'], streak: 4, longestStreak: 8, completedDates: Array.from({ length: 4 }, (_, i) => format(subDays(today, i), 'yyyy-MM-dd')) },
+  { id: 'h5', name: 'Exercise', icon: 'Activity', color: '#F43F5E', frequency: 'daily', targetDays: ['mon', 'wed', 'fri', 'sun'], streak: 2, longestStreak: 12, completedDates: Array.from({ length: 2 }, (_, i) => format(subDays(today, i * 2), 'yyyy-MM-dd')) },
 ]
 
 export const seedGoals = [
@@ -88,7 +88,7 @@ export const seedRevisions = [
 export const DEMO_USER = {
   id: 'user1',
   name: 'Alex Chen',
-  email: 'alex@studyflow.app',
+  email: 'alex@plannova.app',
   avatar: null,
   streak: 7,
   totalStudyHours: 176,

@@ -1,6 +1,6 @@
-# StudyFlow — Deployment Guide
+# Plannova — Deployment Guide
 
-This guide covers deploying StudyFlow to production using:
+This guide covers deploying Plannova to production using:
 - **Frontend** → [Vercel](https://vercel.com) (free)
 - **Backend** → [Render](https://render.com) (free tier)
 - **Database** → [MongoDB Atlas](https://www.mongodb.com/atlas) (free M0 tier)
@@ -16,7 +16,7 @@ This guide covers deploying StudyFlow to production using:
 4. Under **Network Access** → Add IP Address → **Allow access from anywhere** (`0.0.0.0/0`)
 5. Click **Connect** → **Drivers** → Copy the connection string:
    ```
-   mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/studyflow?retryWrites=true&w=majority
+   mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/plannova?retryWrites=true&w=majority
    ```
 
 ---
@@ -37,7 +37,7 @@ This guide covers deploying StudyFlow to production using:
 ```
 NODE_ENV=production
 PORT=10000
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/studyflow
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/plannova
 JWT_SECRET=your-minimum-32-character-secret-key-here
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=https://your-app.vercel.app
@@ -46,7 +46,7 @@ CORS_ORIGIN=https://your-app.vercel.app
 ### Notes
 - Render free tier **spins down after 15 minutes of inactivity** — first request will be slow (~30s)
 - Upgrade to Starter plan ($7/month) for always-on
-- Your backend URL will be: `https://studyflow-api.onrender.com`
+- Your backend URL will be: `https://plannova-api.onrender.com`
 
 ---
 
@@ -63,12 +63,12 @@ CORS_ORIGIN=https://your-app.vercel.app
 
 ### Environment Variables (add in Vercel dashboard)
 ```
-VITE_API_URL=https://studyflow-api.onrender.com/api
+VITE_API_URL=https://plannova-api.onrender.com/api
 ```
 
 ### Notes
 - Vercel auto-deploys on every push to `main`
-- Your frontend URL will be: `https://studyflow.vercel.app`
+- Your frontend URL will be: `https://plannova.vercel.app`
 - Update `CORS_ORIGIN` in Render with your exact Vercel URL
 
 ---
@@ -77,7 +77,7 @@ VITE_API_URL=https://studyflow-api.onrender.com/api
 
 ### Security
 - [ ] JWT_SECRET is at least 32 random characters
-- [ ] MongoDB user has only `readWrite` permission on the `studyflow` database
+- [ ] MongoDB user has only `readWrite` permission on the `plannova` database
 - [ ] MongoDB Network Access allows only Render's IP (optional, more secure)
 - [ ] `NODE_ENV=production` is set on Render
 - [ ] CORS_ORIGIN is set to your exact Vercel domain (not `*`)
@@ -99,12 +99,12 @@ VITE_API_URL=https://studyflow-api.onrender.com/api
 
 ### Vercel
 1. Go to your project settings → **Domains**
-2. Add your custom domain: `studyflow.yourdomain.com`
+2. Add your custom domain: `plannova.yourdomain.com`
 3. Add a CNAME record in your DNS pointing to `cname.vercel-dns.com`
 
 ### Render
 1. Go to your service settings → **Custom Domains**
-2. Add: `api.studyflow.yourdomain.com`
+2. Add: `api.plannova.yourdomain.com`
 3. Update `VITE_API_URL` in Vercel to point to this domain
 4. Update `CORS_ORIGIN` in Render accordingly
 
@@ -121,7 +121,7 @@ VITE_API_URL=https://studyflow-api.onrender.com/api
 1. Create account at [uptimerobot.com](https://uptimerobot.com)
 2. Add new monitor:
    - Type: **HTTP(s)**
-   - URL: `https://studyflow-api.onrender.com/health`
+   - URL: `https://plannova-api.onrender.com/health`
    - Interval: **5 minutes**
 
 ---

@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/SuhaniPatel36/Plannova/main/public/favicon.svg" alt="Plannova Logo" width="100" />
 
-  # 🌟 Plannova (StudyFlow)
+  # 🌟 Plannova (Plannova)
   **Your Ultimate Premium Study Companion**
 
   [![React](https://img.shields.io/badge/React-19.0-blue.svg?style=for-the-badge&logo=react)](https://react.dev/)
@@ -65,7 +65,7 @@ npm install
 Create a `.env` file in the `/server` directory and add the following variables:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/studyflow
+MONGODB_URI=mongodb://localhost:27017/plannova
 JWT_SECRET=your_super_secret_jwt_key
 CLIENT_URL=http://localhost:5173
 GOOGLE_CLIENT_ID=your_google_client_id_here
@@ -103,7 +103,7 @@ In the `/server` directory, run:
 node create-demo.js
 ```
 Then log in on the frontend with:
-- **Email:** `demo@studyflow.com`
+- **Email:** `demo@plannova.com`
 - **Password:** `password123`
 
 ---

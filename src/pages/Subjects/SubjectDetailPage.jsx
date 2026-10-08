@@ -2,7 +2,6 @@ import { useParams, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
 import { ArrowLeft, CheckSquare, Square, Clock, Target, BookOpen } from 'lucide-react'
-import { toggleChapter } from '@/features/subjectsSlice'
 import ProgressRing from '@/components/ui/ProgressRing'
 import { ProgressBar } from '@/components/ui/ProgressRing'
 import { selectSubjectById } from '@/features/subjectsSlice'
@@ -75,8 +74,7 @@ export default function SubjectDetailPage() {
             </div>
             <div className="divide-y" style={{ '--tw-divide-opacity': 1 }}>
               {defaultChapters.map((ch, i) => (
-                <div key={ch.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-[var(--bg-hover)] transition-colors cursor-pointer"
-                  onClick={() => dispatch(toggleChapter({ subjectId: id, chapterId: ch.id }))}>
+                <div key={ch.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-[var(--bg-hover)] transition-colors">
                   {ch.completed ? (
                     <CheckSquare size={18} style={{ color: subject.color, flexShrink: 0 }} />
                   ) : (

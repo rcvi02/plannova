@@ -1,4 +1,5 @@
 import { cn } from '@/utils/helpers'
+import IconRenderer from '@/components/ui/IconRenderer'
 
 export function EmptyState({ icon: Icon, title, description, action, className }) {
   return (
@@ -24,8 +25,8 @@ export function EmptyState({ icon: Icon, title, description, action, className }
 export function ErrorState({ title = 'Something went wrong', description, onRetry }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'var(--danger-soft)' }}>
-        <span style={{ color: 'var(--danger)', fontSize: 24 }}>⚠</span>
+      <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-sm" style={{ background: 'var(--danger-soft)', border: '1px solid var(--danger)' }}>
+        <IconRenderer name="AlertTriangle" size={24} style={{ color: 'var(--danger)' }} />
       </div>
       <h3 className="text-base font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>{title}</h3>
       {description && <p className="text-sm max-w-xs mb-4" style={{ color: 'var(--text-muted)' }}>{description}</p>}

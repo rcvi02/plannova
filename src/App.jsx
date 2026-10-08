@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -29,6 +29,8 @@ import PageLoader from '@/components/ui/PageLoader'
 const LandingPage = lazy(() => import('@/pages/Landing/LandingPage'))
 const LoginPage = lazy(() => import('@/pages/Auth/LoginPage'))
 const RegisterPage = lazy(() => import('@/pages/Auth/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('@/pages/Auth/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/pages/Auth/ResetPasswordPage'))
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const TodayPage = lazy(() => import('@/pages/Today/TodayPage'))
 const PlannerPage = lazy(() => import('@/pages/Planner/PlannerPage'))
@@ -56,6 +58,7 @@ function ProtectedRoute({ children }) {
 export default function App() {
   const dispatch = useDispatch()
   const { isAuthenticated, isSeeded } = useSelector(s => s.auth)
+  const [isInitializing, setIsInitializing] = useState(true)
 
   // Fetch user data and bootstrap application
   useEffect(() => {
@@ -79,17 +82,50 @@ export default function App() {
         } catch (error) {
            console.error("Failed to bootstrap data", error)
         }
-      } else {
-        // We'll still keep loginDemo if token doesn't exist just to test UI without a backend user for now,
-        // but ideally we'd redirect to login.
-        // For now, let's rely on the user to login via the login page.
       }
+
+      // Remove the intentional delay to make the app load faster
+      setIsInitializing(false)
 
       return () => window.removeEventListener('auth:unauthorized', handleUnauthorized)
     }
 
     bootstrap()
   }, [isAuthenticated, dispatch])
+
+  // Sync theme with Redux state and system preference
+  const themeMode = useSelector(s => s.theme.mode)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    
+    const applyTheme = () => {
+      let isDark = themeMode === 'dark'
+      if (themeMode === 'system') {
+        isDark = mediaQuery.matches
+      }
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+      if (isDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+
+    applyTheme() // Apply initially and when themeMode changes
+
+    const handleChange = () => {
+      if (themeMode === 'system') {
+        applyTheme()
+      }
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [themeMode])
+
+  if (isInitializing) {
+    return <PageLoader />
+  }
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -99,6 +135,8 @@ export default function App() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Route>
 
         {/* Protected App */}

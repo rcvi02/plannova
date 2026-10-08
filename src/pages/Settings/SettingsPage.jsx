@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User, Palette, Bell, Clock, Shield, Sun, Moon, Monitor, LogOut, Save, Menu, X } from 'lucide-react'
+import IconRenderer from '@/components/ui/IconRenderer'
 import { setTheme } from '@/features/themeSlice'
 import { updateProfile, logout } from '@/features/authSlice'
 import { updateSettings } from '@/features/timerSlice'
@@ -262,19 +263,19 @@ export default function SettingsPage() {
           {activeSection === 'Data & Privacy' && (
             <div className="max-w-lg space-y-4">
               <div className="rounded-xl p-4" style={{ background: 'var(--accent-soft)', border: '1px solid var(--border)' }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>🔒 Your data stays local</p>
+                <p className="text-sm font-semibold flex items-center justify-center gap-1.5" style={{ color: 'var(--accent)' }}><IconRenderer name="Lock" size={14} /> Your data stays local</p>
                 <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
                   All your study data is stored locally in your browser using Redux Persist + localStorage. Nothing is sent to any external server in demo mode.
                 </p>
               </div>
               <div className="rounded-xl p-4" style={{ background: 'var(--warning-soft)', border: '1px solid var(--warning)30' }}>
-                <p className="text-sm font-semibold mb-1" style={{ color: 'var(--warning)' }}>⚠️ Export your data first</p>
+                <p className="text-sm font-semibold mb-1 flex items-center justify-center gap-1.5" style={{ color: 'var(--warning)' }}><IconRenderer name="AlertTriangle" size={14} /> Export your data first</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Clearing data is permanent and cannot be undone.</p>
               </div>
               <button
                 onClick={() => {
                   if (window.confirm('Are you sure? This will delete ALL your study data and cannot be undone.')) {
-                    localStorage.removeItem('studyflow-root')
+                    localStorage.removeItem('plannova-root')
                     toast.success('All data cleared. Refreshing...')
                     setTimeout(() => window.location.reload(), 1500)
                   }

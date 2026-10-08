@@ -1,4 +1,4 @@
-# StudyFlow API Documentation
+# Plannova API Documentation
 
 Base URL: `http://localhost:5000/api`
 
