@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import User from './src/models/User.js';
 import Subject from './src/models/Subject.js';
 import Task from './src/models/Task.js';
@@ -8,6 +11,15 @@ import Goal from './src/models/Goal.js';
 import Exam from './src/models/Exam.js';
 import Note from './src/models/Note.js';
 import Revision from './src/models/Revision.js';
+
+import dns from 'dns';
+
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {}
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/plannova';
 
