@@ -22,6 +22,12 @@ const noteSchema = new mongoose.Schema({
   attachments: { type: [attachmentSchema], default: [] },
 }, { timestamps: true })
 
+noteSchema.virtual('pinned').get(function () { return this.isPinned })
+noteSchema.virtual('favorite').get(function () { return this.isFavorite })
+noteSchema.virtual('subjectId').get(function () { return this.subject?._id || this.subject })
+noteSchema.set('toJSON', { virtuals: true })
+noteSchema.set('toObject', { virtuals: true })
+
 noteSchema.index({ user: 1, isPinned: -1, updatedAt: -1 })
 noteSchema.index({ user: 1, subject: 1 })
 noteSchema.index({ user: 1, title: 'text', plainTextContent: 'text', tags: 'text' })

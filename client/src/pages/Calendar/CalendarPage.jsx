@@ -15,16 +15,16 @@ export default function CalendarPage() {
   const revisions = useSelector(s => s.revisions.items)
   const sessions = useSelector(s => s.sessions.items)
 
-  const getSubject = (id) => subjects.find(s => s.id === id)
+  const getSubject = (id) => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const events = useMemo(() => {
     const evts = []
 
     tasks.forEach(t => {
       if (!t.dueDate) return
-      const sub = getSubject(t.subjectId)
+      const sub = getSubject(t.subjectId || t.subject?._id || t.subject)
       evts.push({
-        id: `task-${t.id}`,
+        id: `task-${t._id || t.id}`,
         title: t.title,
         date: t.dueDate,
         backgroundColor: sub?.color || '#7C3AED',
@@ -35,9 +35,9 @@ export default function CalendarPage() {
     })
 
     exams.forEach(e => {
-      const sub = getSubject(e.subjectId)
+      const sub = getSubject(e.subjectId || e.subject?._id || e.subject)
       evts.push({
-        id: `exam-${e.id}`,
+        id: `exam-${e._id || e.id}`,
         title: `${e.name}`,
         date: e.date,
         backgroundColor: '#F43F5E',
@@ -48,11 +48,11 @@ export default function CalendarPage() {
     })
 
     revisions.forEach(r => {
-      const sub = getSubject(r.subjectId)
+      const sub = getSubject(r.subjectId || r.subject?._id || r.subject)
       evts.push({
-        id: `rev-${r.id}`,
-        title: `${r.topic}`,
-        date: r.dueDate,
+        id: `rev-${r._id || r.id}`,
+        title: `${r.topic || r.topicTitle || 'Revision'}`,
+        date: r.dueDate || r.scheduledDate,
         backgroundColor: '#F59E0B',
         borderColor: 'transparent',
         textColor: '#fff',
@@ -61,9 +61,9 @@ export default function CalendarPage() {
     })
 
     sessions.slice(0, 20).forEach(s => {
-      const sub = getSubject(s.subjectId)
+      const sub = getSubject(s.subjectId || s.subject?._id || s.subject)
       evts.push({
-        id: `sess-${s.id}`,
+        id: `sess-${s._id || s.id}`,
         title: `⏱ ${sub?.name || 'Study'} session`,
         date: s.date,
         backgroundColor: '#10B981',

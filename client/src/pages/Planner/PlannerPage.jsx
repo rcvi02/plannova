@@ -21,7 +21,7 @@ export default function PlannerPage() {
     return tasks.filter(t => t.dueDate === dateStr)
   }
 
-  const getSubject = (id) => subjects.find(s => s.id === id)
+  const getSubject = (id) => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   return (
     <div className="h-full flex flex-col">
@@ -83,10 +83,10 @@ export default function PlannerPage() {
                   ))}
                   <div className="absolute top-2 left-1 right-1 space-y-1">
                     {dayTasks.slice(0, 4).map(task => {
-                      const subject = getSubject(task.subjectId)
+                      const subject = getSubject(task.subjectId || task.subject?._id || task.subject)
                       const p = getPriorityConfig(task.priority)
                       return (
-                        <div key={task.id} className="px-2 py-1.5 rounded-lg text-xs font-medium truncate cursor-pointer"
+                        <div key={task._id || task.id} className="px-2 py-1.5 rounded-lg text-xs font-medium truncate cursor-pointer"
                           style={{ background: subject?.color ? subject.color + '20' : 'var(--accent-soft)', color: subject?.color || 'var(--accent)', border: `1px solid ${subject?.color ? subject.color + '40' : 'var(--border)'}` }}>
                           {task.title}
                         </div>
@@ -123,9 +123,9 @@ export default function PlannerPage() {
                   ) : (
                     <div className="pl-12 space-y-2">
                       {dayTasks.map(task => {
-                        const subject = getSubject(task.subjectId)
+                        const subject = getSubject(task.subjectId || task.subject?._id || task.subject)
                         return (
-                          <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
+                          <div key={task._id || task.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
                             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: subject?.color || 'var(--border)' }} />
                             <p className="text-sm flex-1" style={{ color: 'var(--text-primary)', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</p>
                             <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>{task.priority}</span>

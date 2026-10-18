@@ -23,9 +23,28 @@ export const getExams = asyncHandler(async (req, res) => {
   })
 })
 
+const normalizeExamPayload = (body) => {
+  const data = { ...body }
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+  if (data.targetScore && !data.targetMarks) data.targetMarks = Number(data.targetScore)
+  if (data.prepProgress !== undefined && data.preparationProgress === undefined) data.preparationProgress = Number(data.prepProgress)
+  if (Array.isArray(data.syllabus) && (!data.syllabusTopics || data.syllabusTopics.length === 0)) {
+    data.syllabusTopics = data.syllabus.map(item => {
+      if (typeof item === 'string') {
+        const completed = Array.isArray(data.completedSyllabus) && data.completedSyllabus.includes(item)
+        return { title: item, completed }
+      }
+      return item
+    })
+  }
+  return data
+}
+
 // POST /api/exams
 export const createExam = asyncHandler(async (req, res) => {
-  const exam = await Exam.create({ ...req.body, user: req.user._id })
+  const data = normalizeExamPayload(req.body)
+  const exam = await Exam.create({ ...data, user: req.user._id })
   await exam.populate('subject', 'name color icon')
   return sendSuccess(res, { message: 'Exam created.', data: { exam }, statusCode: 201 })
 })
@@ -39,9 +58,10 @@ export const getExam = asyncHandler(async (req, res) => {
 
 // PUT /api/exams/:id
 export const updateExam = asyncHandler(async (req, res) => {
+  const data = normalizeExamPayload(req.body)
   const exam = await Exam.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
-    req.body,
+    data,
     { new: true, runValidators: true }
   ).populate('subject', 'name color icon')
   if (!exam) return sendError(res, { message: 'Exam not found.', statusCode: 404 })

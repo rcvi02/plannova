@@ -25,7 +25,7 @@ export default function TodayPage() {
   const todayMinutes = sessions.filter(s => s.date === dateStr).reduce((a, s) => a + s.duration, 0)
   const completionPct = todayTasks.length > 0 ? Math.round((completed.length / todayTasks.length) * 100) : 0
 
-  const getSubject = (id) => subjects.find(s => s.id === id)
+  const getSubject = (id) => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const handleToggle = (id) => {
     dispatch(updateTask({ id, data: { status: 'completed' } }))

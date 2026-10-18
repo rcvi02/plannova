@@ -29,13 +29,14 @@ export default function TasksPage() {
   const [editTask, setEditTask] = useState(null)
   const [form, setForm] = useState({ title: '', subjectId: '', priority: 'medium', status: 'pending', dueDate: format(new Date(), 'yyyy-MM-dd'), estimatedTime: 30 })
 
-  const getSubject = (id) => subjects.find(s => s.id === id)
+  const getSubject = (id) => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const filtered = useMemo(() => {
     return tasks.filter(t => {
       if (search && !t.title.toLowerCase().includes(search.toLowerCase())) return false
       if (filterPriority !== 'all' && t.priority !== filterPriority) return false
-      if (filterSubject !== 'all' && t.subjectId !== filterSubject) return false
+      const taskSubId = t.subjectId || t.subject?._id || t.subject
+      if (filterSubject !== 'all' && taskSubId !== filterSubject) return false
       if (activeTab !== 'all' && t.status !== activeTab) return false
       return true
     })
@@ -44,7 +45,8 @@ export default function TasksPage() {
   const handleSave = () => {
     if (!form.title.trim()) return toast.error('Task title is required')
     if (editTask) {
-      dispatch(updateTask({ id: editTask.id, data: form }))
+      const id = editTask._id || editTask.id
+      dispatch(updateTask({ id, data: form }))
       toast.success('Task updated!')
     } else {
       dispatch(createTask(form))
@@ -57,7 +59,8 @@ export default function TasksPage() {
 
   const handleEdit = (task) => {
     setEditTask(task)
-    setForm({ title: task.title, subjectId: task.subjectId || '', priority: task.priority, status: task.status, dueDate: task.dueDate, estimatedTime: task.estimatedTime || 30 })
+    const subjectId = task.subjectId || task.subject?._id || task.subject || ''
+    setForm({ title: task.title, subjectId, priority: task.priority, status: task.status, dueDate: task.dueDate, estimatedTime: task.estimatedTime || 30 })
     setShowModal(true)
   }
 

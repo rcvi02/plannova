@@ -19,8 +19,16 @@ const habitSchema = new mongoose.Schema({
   longestStreak: { type: Number, default: 0 },
   completionHistory: { type: [completionEntrySchema], default: [] },
   active: { type: Boolean, default: true },
-  archived: { type: Boolean, default: false },
 }, { timestamps: true })
+
+habitSchema.virtual('completedDates').get(function () {
+  return this.completionHistory ? this.completionHistory.map(e => e.date) : []
+})
+habitSchema.virtual('streak').get(function () {
+  return this.currentStreak || 0
+})
+habitSchema.set('toJSON', { virtuals: true })
+habitSchema.set('toObject', { virtuals: true })
 
 habitSchema.methods.isCompletedOn = function (dateStr) {
   return this.completionHistory.some(e => e.date === dateStr)

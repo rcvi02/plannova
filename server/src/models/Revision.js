@@ -6,7 +6,8 @@ const revisionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', default: null },
   chapter: { type: mongoose.Schema.Types.ObjectId, ref: 'Chapter', default: null },
-  topic: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', default: null },
+  topicRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', default: null },
+  topic: { type: String, trim: true, maxlength: 200 },
   topicTitle: { type: String, required: [true, 'Topic is required'], trim: true, maxlength: 200 },
   revisionNumber: { type: Number, default: 1, min: 1 },
   scheduledDate: { type: String, required: [true, 'Scheduled date is required'], index: true },
@@ -19,6 +20,17 @@ const revisionSchema = new mongoose.Schema({
   status: { type: String, enum: ['due', 'overdue', 'upcoming', 'completed'], default: 'upcoming' },
   notes: { type: String, trim: true, maxlength: 500, default: '' },
 }, { timestamps: true })
+
+revisionSchema.pre('save', function (next) {
+  if (this.topic && !this.topicTitle) this.topicTitle = this.topic
+  if (this.topicTitle && !this.topic) this.topic = this.topicTitle
+  next()
+})
+
+revisionSchema.virtual('confidence').get(function () { return this.confidenceAfter || this.confidenceBefore })
+revisionSchema.virtual('subjectId').get(function () { return this.subject?._id || this.subject })
+revisionSchema.set('toJSON', { virtuals: true })
+revisionSchema.set('toObject', { virtuals: true })
 
 revisionSchema.index({ user: 1, scheduledDate: 1 })
 revisionSchema.index({ user: 1, status: 1 })

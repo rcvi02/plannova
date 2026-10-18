@@ -28,6 +28,12 @@ const taskSchema = new mongoose.Schema({
   parentTaskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', default: null },
 }, { timestamps: true })
 
+taskSchema.virtual('subjectId').get(function () {
+  return this.subject?._id || this.subject
+})
+taskSchema.set('toJSON', { virtuals: true })
+taskSchema.set('toObject', { virtuals: true })
+
 taskSchema.index({ user: 1, dueDate: 1 })
 taskSchema.index({ user: 1, status: 1 })
 taskSchema.index({ user: 1, subject: 1 })

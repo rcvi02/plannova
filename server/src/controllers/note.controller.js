@@ -24,9 +24,19 @@ export const getNotes = asyncHandler(async (req, res) => {
   })
 })
 
+const normalizeNotePayload = (body) => {
+  const data = { ...body }
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+  if (data.pinned !== undefined && data.isPinned === undefined) data.isPinned = data.pinned
+  if (data.favorite !== undefined && data.isFavorite === undefined) data.isFavorite = data.favorite
+  return data
+}
+
 // POST /api/notes
 export const createNote = asyncHandler(async (req, res) => {
-  const note = await Note.create({ ...req.body, user: req.user._id })
+  const data = normalizeNotePayload(req.body)
+  const note = await Note.create({ ...data, user: req.user._id })
   await note.populate('subject', 'name color icon')
   return sendSuccess(res, { message: 'Note created.', data: { note }, statusCode: 201 })
 })
@@ -40,9 +50,10 @@ export const getNote = asyncHandler(async (req, res) => {
 
 // PUT /api/notes/:id
 export const updateNote = asyncHandler(async (req, res) => {
+  const data = normalizeNotePayload(req.body)
   const note = await Note.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
-    req.body,
+    data,
     { new: true, runValidators: true }
   ).populate('subject', 'name color icon')
   if (!note) return sendError(res, { message: 'Note not found.', statusCode: 404 })

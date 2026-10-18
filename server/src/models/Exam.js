@@ -22,6 +22,24 @@ const examSchema = new mongoose.Schema({
   status: { type: String, enum: ['upcoming', 'completed', 'missed'], default: 'upcoming' },
 }, { timestamps: true })
 
+examSchema.virtual('syllabus').get(function () {
+  return this.syllabusTopics ? this.syllabusTopics.map(t => t.title) : []
+})
+examSchema.virtual('completedSyllabus').get(function () {
+  return this.syllabusTopics ? this.syllabusTopics.filter(t => t.completed).map(t => t.title) : []
+})
+examSchema.virtual('prepProgress').get(function () {
+  return this.preparationProgress || 0
+})
+examSchema.virtual('targetScore').get(function () {
+  return this.targetMarks || 80
+})
+examSchema.virtual('subjectId').get(function () {
+  return this.subject?._id || this.subject
+})
+examSchema.set('toJSON', { virtuals: true })
+examSchema.set('toObject', { virtuals: true })
+
 examSchema.index({ user: 1, date: 1 })
 examSchema.index({ user: 1, status: 1 })
 examSchema.index({ user: 1, name: 'text' })

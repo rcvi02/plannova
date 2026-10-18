@@ -85,7 +85,8 @@ userSchema.methods.toPublicJSON = function () {
   return obj
 }
 
-userSchema.index({ email: 1 }, { unique: true })
+userSchema.set('toJSON', { virtuals: true })
+userSchema.set('toObject', { virtuals: true })
 userSchema.index({ createdAt: -1 })
 
 const User = mongoose.model('User', userSchema)

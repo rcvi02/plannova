@@ -19,7 +19,7 @@ const goalSchema = new mongoose.Schema({
   targetValue: { type: Number, required: [true, 'Target value is required'], min: 1 },
   current: { type: Number, default: 0, min: 0 },
   unit: { type: String, trim: true, maxlength: 30, default: 'tasks' },
-  startDate: { type: String, required: true },
+  startDate: { type: String, default: () => new Date().toISOString().split('T')[0] },
   targetDate: { type: String, required: [true, 'Target date is required'] },
   deadline: { type: String }, // alias
   progress: { type: Number, default: 0, min: 0, max: 100 },
@@ -30,6 +30,10 @@ const goalSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 goalSchema.pre('save', function (next) {
+  if (this.target && !this.targetValue) this.targetValue = this.target
+  if (this.deadline && !this.targetDate) this.targetDate = this.deadline
+  if (this.type && !this.goalType) this.goalType = this.type
+
   if (this.targetValue > 0) {
     this.progress = Math.min(Math.round((this.current / this.targetValue) * 100), 100)
   }
@@ -40,6 +44,12 @@ goalSchema.pre('save', function (next) {
   }
   next()
 })
+
+goalSchema.virtual('target').get(function () { return this.targetValue })
+goalSchema.virtual('type').get(function () { return this.goalType })
+goalSchema.virtual('subjectId').get(function () { return this.subject?._id || this.subject })
+goalSchema.set('toJSON', { virtuals: true })
+goalSchema.set('toObject', { virtuals: true })
 
 goalSchema.index({ user: 1, status: 1 })
 goalSchema.index({ user: 1, goalType: 1 })

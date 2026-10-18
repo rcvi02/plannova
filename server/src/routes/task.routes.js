@@ -14,6 +14,8 @@ router.get('/:id', objectIdCheck('id'), task.getTask)
 router.put('/:id', objectIdCheck('id'), task.updateTask)
 router.delete('/:id', objectIdCheck('id'), task.deleteTask)
 router.put('/:id/toggle', objectIdCheck('id'), task.toggleTask)
+router.patch('/:id/toggle', objectIdCheck('id'), task.toggleTask)
 router.put('/:id/reschedule', objectIdCheck('id'), task.rescheduleTask)
+router.patch('/:id/reschedule', objectIdCheck('id'), task.rescheduleTask)
 
 export default router

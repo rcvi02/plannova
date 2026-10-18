@@ -4,7 +4,8 @@ const studySessionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', default: null },
   chapter: { type: mongoose.Schema.Types.ObjectId, ref: 'Chapter', default: null },
-  topic: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', default: null },
+  topicRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic', default: null },
+  topic: { type: String, trim: true, maxlength: 200, default: '' },
   task: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', default: null },
   sessionType: { type: String, enum: ['pomodoro', 'manual', 'stopwatch'], default: 'manual' },
   date: { type: String, required: [true, 'Session date is required'], index: true },
@@ -19,10 +20,15 @@ const studySessionSchema = new mongoose.Schema({
   completed: { type: Boolean, default: true },
 }, { timestamps: true })
 
-// Alias for frontend compatibility (uses `topic` as a string in some places)
+// Alias for frontend compatibility
 studySessionSchema.virtual('rating').get(function () {
   return this.focusRating
 })
+studySessionSchema.virtual('subjectId').get(function () {
+  return this.subject?._id || this.subject
+})
+studySessionSchema.set('toJSON', { virtuals: true })
+studySessionSchema.set('toObject', { virtuals: true })
 
 studySessionSchema.index({ user: 1, date: -1 })
 studySessionSchema.index({ user: 1, subject: 1 })

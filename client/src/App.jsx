@@ -8,19 +8,15 @@ import AppLayout from '@/layouts/AppLayout'
 import AuthLayout from '@/layouts/AuthLayout'
 
 // Redux imports
-import { logout } from '@/features/authSlice'
+import { logout, fetchMe, setSeeded } from '@/features/authSlice'
 import { fetchTasks } from '@/features/tasksSlice'
 import { fetchSubjects } from '@/features/subjectsSlice'
 import { fetchGoals } from '@/features/goalsSlice'
-import { fetchMe } from '@/features/authSlice'
-
-import { seedExamsAction } from '@/features/examsSlice'
-import { seedSessionsAction } from '@/features/sessionsSlice'
-import { seedHabitsAction } from '@/features/habitsSlice'
-import { seedNotesAction } from '@/features/notesSlice'
-import { seedRevisionsAction } from '@/features/revisionsSlice'
-import { setSeeded } from '@/features/authSlice'
-import { seedExams, seedSessions, seedHabits, seedNotes, seedRevisions } from '@/utils/seedData'
+import { fetchExams } from '@/features/examsSlice'
+import { fetchHabits } from '@/features/habitsSlice'
+import { fetchSessions } from '@/features/sessionsSlice'
+import { fetchNotes } from '@/features/notesSlice'
+import { fetchRevisions } from '@/features/revisionsSlice'
 
 // Suspense fallback
 import PageLoader from '@/components/ui/PageLoader'
@@ -75,6 +71,11 @@ export default function App() {
            dispatch(fetchSubjects())
            dispatch(fetchTasks())
            dispatch(fetchGoals())
+           dispatch(fetchExams())
+           dispatch(fetchHabits())
+           dispatch(fetchSessions())
+           dispatch(fetchNotes())
+           dispatch(fetchRevisions())
            // Remove seeding so new users start completely blank
            if (!isSeeded) {
              dispatch(setSeeded())

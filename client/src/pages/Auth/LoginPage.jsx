@@ -22,7 +22,7 @@ export default function LoginPage() {
   const { loading } = useSelector(state => state.auth)
   const [showPassword, setShowPassword] = useState(false)
 
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) })
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data) => {
     try {
@@ -36,6 +36,12 @@ export default function LoginPage() {
     } catch (err) {
       toast.error('An error occurred during login')
     }
+  }
+
+  const handleQuickDemo = async () => {
+    setValue('email', 'demo@plannova.com')
+    setValue('password', 'password123')
+    await onSubmit({ email: 'demo@plannova.com', password: 'password123' })
   }
 
   const handleGoogleSuccess = async (credentialResponse) => {
@@ -297,6 +303,15 @@ export default function LoginPage() {
             >
               {loading ? <ButtonLoader color="#ffffff" /> : 'Log in'}
             </motion.button>
+
+            <button
+              type="button"
+              onClick={handleQuickDemo}
+              disabled={loading}
+              className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all border border-dashed border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent-soft)]"
+            >
+              ⚡ Quick Demo Login (demo@plannova.com)
+            </button>
           </motion.form>
 
           <motion.div variants={fadeInUp} className="mt-8 text-center">

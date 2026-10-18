@@ -1,9 +1,19 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, nanoid } from '@reduxjs/toolkit'
 import { addDays, format } from 'date-fns'
+import api from '@/utils/api'
 
 const SPACED_REPETITION_INTERVALS = [1, 3, 7, 14, 30, 90]
 
-const initialState = { items: [] }
+export const fetchRevisions = createAsyncThunk('revisions/fetchAll', async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get('/revisions')
+    return response.data.data.revisions || []
+  } catch (err) {
+    return rejectWithValue(err.response?.data?.message || 'Failed to fetch revisions')
+  }
+})
+
+const initialState = { items: [], loading: false, error: null }
 
 const revisionsSlice = createSlice({
   name: 'revisions',
@@ -25,28 +35,28 @@ const revisionsSlice = createSlice({
     },
     completeRevision: (state, action) => {
       const { id, confidence } = action.payload
-      const rev = state.items.find(r => r.id === id)
+      const rev = state.items.find(r => (r._id || r.id) === id)
       if (rev) {
         rev.confidence = confidence
         rev.status = 'completed'
         rev.lastCompleted = format(new Date(), 'yyyy-MM-dd')
-        const interval = SPACED_REPETITION_INTERVALS[Math.min(rev.revisionNumber, SPACED_REPETITION_INTERVALS.length - 1)]
+        const interval = SPACED_REPETITION_INTERVALS[Math.min(rev.revisionNumber || 1, SPACED_REPETITION_INTERVALS.length - 1)]
         rev.nextDate = format(addDays(new Date(), interval), 'yyyy-MM-dd')
-        rev.revisionNumber += 1
+        rev.revisionNumber = (rev.revisionNumber || 1) + 1
         rev.dueDate = rev.nextDate
         rev.status = 'upcoming'
       }
     },
     rescheduleRevision: (state, action) => {
       const { id, date } = action.payload
-      const rev = state.items.find(r => r.id === id)
+      const rev = state.items.find(r => (r._id || r.id) === id)
       if (rev) {
         rev.dueDate = date
         rev.status = 'upcoming'
       }
     },
     deleteRevision: (state, action) => {
-      state.items = state.items.filter(r => r.id !== action.payload)
+      state.items = state.items.filter(r => (r._id || r.id) !== action.payload)
     },
     updateRevisionStatus: (state) => {
       const today = format(new Date(), 'yyyy-MM-dd')
@@ -59,6 +69,14 @@ const revisionsSlice = createSlice({
       })
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchRevisions.fulfilled, (state, action) => {
+        if (action.payload && action.payload.length > 0) {
+          state.items = action.payload
+        }
+      })
+  }
 })
 
 export const { seedRevisions: seedRevisionsAction, addRevision, completeRevision, rescheduleRevision, deleteRevision, updateRevisionStatus } = revisionsSlice.actions

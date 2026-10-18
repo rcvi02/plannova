@@ -34,5 +34,8 @@ subjectSchema.pre('save', function (next) {
   next()
 })
 
+subjectSchema.set('toJSON', { virtuals: true })
+subjectSchema.set('toObject', { virtuals: true })
+
 const Subject = mongoose.model('Subject', subjectSchema)
 export default Subject

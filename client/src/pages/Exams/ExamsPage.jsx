@@ -24,7 +24,7 @@ export default function ExamsPage() {
   const upcoming = exams.filter(e => e.date >= today).sort((a, b) => a.date.localeCompare(b.date))
   const past = exams.filter(e => e.date < today)
 
-  const getSubject = (id) => subjects.find(s => s.id === id)
+  const getSubject = (id) => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const handleSave = () => {
     if (!form.name || !form.date) return toast.error('Exam name and date are required')
@@ -58,7 +58,7 @@ export default function ExamsPage() {
               <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-secondary)' }}>Upcoming</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {upcoming.map((exam, i) => (
-                  <ExamCard key={exam.id} exam={exam} subject={getSubject(exam.subjectId)} index={i} dispatch={dispatch} />
+                  <ExamCard key={exam._id || exam.id} exam={exam} subject={getSubject(exam.subjectId || exam.subject?._id || exam.subject)} index={i} dispatch={dispatch} />
                 ))}
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function ExamsPage() {
               <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-muted)' }}>Past Exams</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {past.map((exam, i) => (
-                  <ExamCard key={exam.id} exam={exam} subject={getSubject(exam.subjectId)} index={i} dispatch={dispatch} isPast />
+                  <ExamCard key={exam._id || exam.id} exam={exam} subject={getSubject(exam.subjectId || exam.subject?._id || exam.subject)} index={i} dispatch={dispatch} isPast />
                 ))}
               </div>
             </div>
@@ -93,7 +93,7 @@ export default function ExamsPage() {
             <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--text-primary)' }}>Subject</label>
             <select value={form.subjectId} onChange={e => setForm(p => ({ ...p, subjectId: e.target.value }))} className="w-full px-3 py-2.5 text-sm rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}>
               <option value="">Select subject</option>
-              {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+              {subjects.map(s => <option key={s._id || s.id} value={s._id || s.id}>{s.name}</option>)}
             </select>
           </div>
           <div>
@@ -146,10 +146,10 @@ function ExamCard({ exam, subject, index, dispatch, isPast }) {
         <div className="flex items-center justify-between mt-4">
           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Target: {exam.targetScore}%</span>
           <div className="flex items-center gap-1">
-            <Link to={`/app/exams/${exam.id}`} className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+            <Link to={`/app/exams/${exam._id || exam.id}`} className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
               Details <ChevronRight size={11} />
             </Link>
-            <button onClick={() => { dispatch(deleteExam(exam.id)); toast.success('Exam removed') }} className="p-1.5 rounded-lg ml-1" style={{ color: 'var(--text-muted)' }}
+            <button onClick={() => { dispatch(deleteExam(exam._id || exam.id)); toast.success('Exam removed') }} className="p-1.5 rounded-lg ml-1" style={{ color: 'var(--text-muted)' }}
               onMouseEnter={e => e.currentTarget.style.background = 'var(--danger-soft)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
               <Trash2 size={13} />

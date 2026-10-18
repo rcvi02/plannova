@@ -24,11 +24,26 @@ export const getSessions = asyncHandler(async (req, res) => {
   })
 })
 
+const normalizeSessionPayload = (body) => {
+  const data = { ...body }
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+  if (typeof data.topic === 'string') {
+    data.topic_description = data.topic
+    delete data.topic
+  }
+  if (data.rating && !data.focusRating) {
+    data.focusRating = Number(data.rating)
+  }
+  return data
+}
+
 // POST /api/study-sessions
 export const createSession = asyncHandler(async (req, res) => {
-  const { date, duration, subject } = req.body
+  const data = normalizeSessionPayload(req.body)
+  const { date = format(new Date(), 'yyyy-MM-dd'), duration = 0, subject } = data
   
-  const session = await StudySession.create({ ...req.body, user: req.user._id })
+  const session = await StudySession.create({ ...data, date, duration, user: req.user._id })
   await session.populate('subject', 'name color icon')
 
   // Update subject study hours
@@ -45,9 +60,10 @@ export const createSession = asyncHandler(async (req, res) => {
 
 // PUT /api/study-sessions/:id
 export const updateSession = asyncHandler(async (req, res) => {
+  const data = normalizeSessionPayload(req.body)
   const session = await StudySession.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
-    req.body,
+    data,
     { new: true, runValidators: true }
   ).populate('subject', 'name color icon')
   if (!session) return sendError(res, { message: 'Session not found.', statusCode: 404 })

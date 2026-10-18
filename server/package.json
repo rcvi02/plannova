@@ -1,6 +1,7 @@
 {
   "name": "plannova-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "Plannova MERN Backend API",
   "main": "src/server.js",
   "scripts": {

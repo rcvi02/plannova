@@ -20,7 +20,7 @@ export default function RevisionPage() {
   const [confidence, setConfidence] = useState(3)
   const [form, setForm] = useState({ topic: '', subjectId: '', dueDate: fmt(new Date(), 'yyyy-MM-dd') })
 
-  const getSubject = id => subjects.find(s => s.id === id)
+  const getSubject = id => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const due = revisions.filter(r => r.status === 'due')
   const overdue = revisions.filter(r => r.status === 'overdue')
@@ -28,7 +28,8 @@ export default function RevisionPage() {
 
   const handleComplete = () => {
     if (!completeModal) return
-    dispatch(completeRevision({ id: completeModal.id, confidence }))
+    const id = completeModal._id || completeModal.id
+    dispatch(completeRevision({ id, confidence }))
     toast.success('Revision completed! Next due date scheduled.')
     setCompleteModal(null)
   }
@@ -50,20 +51,21 @@ export default function RevisionPage() {
       </div>
       <div className="space-y-2">
         {items.map(rev => {
-          const sub = getSubject(rev.subjectId)
+          const sub = getSubject(rev.subjectId || rev.subject?._id || rev.subject)
+          const revId = rev._id || rev.id
           return (
-            <motion.div key={rev.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            <motion.div key={revId} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-4 p-4 rounded-2xl"
               style={{ background: 'var(--bg-surface)', border: `1px solid var(--border)` }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${color}18` }}>
                 <Brain size={18} style={{ color }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{rev.topic}</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{rev.topic || rev.topicTitle}</p>
                 <div className="flex items-center gap-3 mt-0.5">
                   {sub && <span className="text-xs" style={{ color: sub.color }}>● {sub.name}</span>}
                   <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Revision #{rev.revisionNumber}</span>
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Due: {format(parseISO(rev.dueDate), 'MMM d')}</span>
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Due: {format(parseISO(rev.dueDate || rev.scheduledDate), 'MMM d')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -77,12 +79,12 @@ export default function RevisionPage() {
                   style={{ background: 'var(--success-soft)', color: 'var(--success)' }}>
                   Mark Done
                 </button>
-                <button onClick={() => { dispatch(rescheduleRevision({ id: rev.id, date: fmt(addDays(new Date(), 1), 'yyyy-MM-dd') })); toast.success('Rescheduled') }}
+                <button onClick={() => { dispatch(rescheduleRevision({ id: revId, date: fmt(addDays(new Date(), 1), 'yyyy-MM-dd') })); toast.success('Rescheduled') }}
                   className="px-3 py-1.5 text-xs rounded-xl font-medium"
                   style={{ background: 'var(--bg-surface-2)', color: 'var(--text-secondary)' }}>
                   Reschedule
                 </button>
-                <button onClick={() => { dispatch(deleteRevision(rev.id)); toast.success('Removed') }} className="p-1.5 rounded-lg text-xs" style={{ color: 'var(--text-muted)' }}>✕</button>
+                <button onClick={() => { dispatch(deleteRevision(revId)); toast.success('Removed') }} className="p-1.5 rounded-lg text-xs" style={{ color: 'var(--text-muted)' }}>✕</button>
               </div>
             </motion.div>
           )

@@ -32,12 +32,18 @@ export const getRevisions = asyncHandler(async (req, res) => {
 
 // POST /api/revisions
 export const createRevision = asyncHandler(async (req, res) => {
-  const { topic, subject, dueDate, confidenceBefore, notes } = req.body
+  const topicTitle = req.body.topicTitle || req.body.topic
+  if (!topicTitle) return sendError(res, { message: 'Topic is required.', statusCode: 400 })
+
+  const subject = (req.body.subject || req.body.subjectId || null) === '' ? null : (req.body.subject || req.body.subjectId || null)
+  const dueDate = req.body.dueDate || format(new Date(), 'yyyy-MM-dd')
+  const confidenceBefore = req.body.confidenceBefore || req.body.confidence || 3
+  const notes = req.body.notes || ''
 
   // Prevent duplicate for same topic and date
   const existing = await Revision.findOne({
     user: req.user._id,
-    topicTitle: topic,
+    topicTitle,
     dueDate,
     completed: false,
   })
@@ -48,12 +54,12 @@ export const createRevision = asyncHandler(async (req, res) => {
   const status = getStatus(dueDate)
   const revision = await Revision.create({
     user: req.user._id,
-    topicTitle: topic,
-    subject: subject || null,
+    topicTitle,
+    subject,
     dueDate,
     scheduledDate: dueDate,
-    confidenceBefore: confidenceBefore || 3,
-    notes: notes || '',
+    confidenceBefore,
+    notes,
     status,
   })
   await revision.populate('subject', 'name color icon')
@@ -63,11 +69,10 @@ export const createRevision = asyncHandler(async (req, res) => {
 
 // PUT /api/revisions/:id/complete
 export const completeRevision = asyncHandler(async (req, res) => {
-  const { confidenceAfter } = req.body
+  const confidence = req.body.confidenceAfter || req.body.confidence || 3
   const revision = await Revision.findOne({ _id: req.params.id, user: req.user._id })
   if (!revision) return sendError(res, { message: 'Revision not found.', statusCode: 404 })
 
-  const confidence = confidenceAfter || 3
   const intervalIndex = Math.min(revision.revisionNumber - 1, SPACED_INTERVALS.length - 1)
   // Adjust interval based on confidence (lower confidence = shorter interval)
   let daysToAdd = SPACED_INTERVALS[intervalIndex]

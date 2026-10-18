@@ -42,9 +42,17 @@ export const getTodayTasks = asyncHandler(async (req, res) => {
   return sendSuccess(res, { message: 'Today tasks.', data: { tasks } })
 })
 
+const normalizeTaskPayload = (body) => {
+  const data = { ...body }
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+  return data
+}
+
 // POST /api/tasks
 export const createTask = asyncHandler(async (req, res) => {
-  const task = await Task.create({ ...req.body, user: req.user._id })
+  const data = normalizeTaskPayload(req.body)
+  const task = await Task.create({ ...data, user: req.user._id })
   await task.populate('subject', 'name color icon')
   return sendSuccess(res, { message: 'Task created.', data: { task }, statusCode: 201 })
 })
@@ -58,15 +66,16 @@ export const getTask = asyncHandler(async (req, res) => {
 
 // PUT /api/tasks/:id
 export const updateTask = asyncHandler(async (req, res) => {
-  if (req.body.status === 'completed') {
-    req.body.completedAt = new Date()
-  } else if (req.body.status && req.body.status !== 'completed') {
-    req.body.completedAt = null
+  const data = normalizeTaskPayload(req.body)
+  if (data.status === 'completed') {
+    data.completedAt = new Date()
+  } else if (data.status && data.status !== 'completed') {
+    data.completedAt = null
   }
 
   const task = await Task.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
-    req.body,
+    data,
     { new: true, runValidators: true }
   ).populate('subject', 'name color icon')
   if (!task) return sendError(res, { message: 'Task not found.', statusCode: 404 })

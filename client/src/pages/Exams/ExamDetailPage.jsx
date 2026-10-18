@@ -9,13 +9,12 @@ import { getDaysUntilExam, getProgressColor } from '@/utils/helpers'
 
 export default function ExamDetailPage() {
   const { id } = useParams()
-  const dispatch = useDispatch()
-  const exam = useSelector(s => s.exams.items.find(e => e.id === id))
+  const exam = useSelector(s => s.exams.items.find(e => (e.id || e._id) === id || e._id === id))
   const subjects = useSelector(s => s.subjects.items)
 
   if (!exam) return <div className="flex items-center justify-center h-full"><Link to="/app/exams" className="btn btn-primary">Back to Exams</Link></div>
 
-  const subject = subjects.find(s => s.id === exam.subjectId)
+  const subject = subjects.find(s => (s.id || s._id) === (exam.subjectId || exam.subject?._id || exam.subject) || s._id === (exam.subjectId || exam.subject?._id || exam.subject))
   const days = getDaysUntilExam(exam.date)
   const isUrgent = days <= 7
   const isPast = days < 0

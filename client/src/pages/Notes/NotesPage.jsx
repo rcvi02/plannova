@@ -100,16 +100,19 @@ export default function NotesPage() {
     }
   }, [notes, pendingNewNote])
 
-  const selectedNote = notes.find(n => n.id === selectedId)
+  const selectedNote = notes.find(n => (n.id || n._id) === selectedId || n._id === selectedId)
 
   const filtered = notes.filter(n => {
     if (search && !n.title?.toLowerCase().includes(search.toLowerCase()) && !n.content?.toLowerCase().includes(search.toLowerCase())) return false
-    if (filterSubject !== 'all' && n.subjectId !== filterSubject) return false
-    if (filterFav && !n.favorite) return false
+    const noteSubId = n.subjectId || n.subject?._id || n.subject
+    if (filterSubject !== 'all' && noteSubId !== filterSubject) return false
+    if (filterFav && !(n.favorite ?? n.isFavorite)) return false
     return true
   }).sort((a, b) => {
-    if (a.pinned && !b.pinned) return -1
-    if (!a.pinned && b.pinned) return 1
+    const aPinned = a.pinned ?? a.isPinned
+    const bPinned = b.pinned ?? b.isPinned
+    if (aPinned && !bPinned) return -1
+    if (!aPinned && bPinned) return 1
     return new Date(b.updatedAt) - new Date(a.updatedAt)
   })
 
@@ -130,7 +133,7 @@ export default function NotesPage() {
     dispatch(updateNote({ id: selectedId, title: e.target.value }))
   }
 
-  const getSubject = id => subjects.find(s => s.id === id)
+  const getSubject = id => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   return (
     <div className="flex flex-col md:flex-row h-full overflow-hidden pb-16 lg:pb-0">

@@ -19,7 +19,7 @@ export default function SessionsPage() {
   const [editSess, setEditSess] = useState(null)
   const [form, setForm] = useState({ subjectId: '', date: format(new Date(), 'yyyy-MM-dd'), duration: 30, topic: '', rating: 4, notes: '' })
 
-  const getSubject = id => subjects.find(s => s.id === id)
+  const getSubject = id => subjects.find(s => (s.id || s._id) === id || s._id === id)
 
   const totalMins = sessions.reduce((a, s) => a + s.duration, 0)
   const avgRating = sessions.length > 0 ? (sessions.reduce((a, s) => a + (s.rating || 0), 0) / sessions.length).toFixed(1) : 0
@@ -32,7 +32,8 @@ export default function SessionsPage() {
 
   const handleSave = () => {
     if (editSess) {
-      dispatch(updateSession({ id: editSess.id, ...form }))
+      const id = editSess._id || editSess.id
+      dispatch(updateSession({ id, ...form }))
       toast.success('Session updated!')
     } else {
       dispatch(addSession(form))
@@ -87,9 +88,10 @@ export default function SessionsPage() {
               </div>
               <div className="space-y-2">
                 {daySessions.map(sess => {
-                  const sub = getSubject(sess.subjectId)
+                  const sub = getSubject(sess.subjectId || sess.subject?._id || sess.subject)
+                  const sessId = sess._id || sess.id
                   return (
-                    <motion.div key={sess.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                    <motion.div key={sessId} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                       className="flex items-center gap-4 p-4 rounded-2xl hover:bg-[var(--bg-hover)] transition-colors group"
                       style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: sub?.colorSoft || 'var(--accent-soft)' }}>
@@ -100,7 +102,7 @@ export default function SessionsPage() {
                         <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{sess.topic || 'Study session'}</p>
                       </div>
                       <div className="flex items-center gap-1">
-                        {[1,2,3,4,5].map(s => <span key={s} style={{ color: s <= sess.rating ? 'var(--warning)' : 'var(--border)', fontSize: 12 }}>★</span>)}
+                        {[1,2,3,4,5].map(s => <span key={s} style={{ color: s <= (sess.rating || sess.focusRating || 3) ? 'var(--warning)' : 'var(--border)', fontSize: 12 }}>★</span>)}
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl" style={{ background: 'var(--accent-soft)' }}>
                         <Clock size={12} style={{ color: 'var(--accent)' }} />
@@ -110,7 +112,7 @@ export default function SessionsPage() {
                         <button onClick={() => handleEdit(sess)} className="p-1.5 rounded-lg" style={{ color: 'var(--text-muted)' }}
                           onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-hover)'}
                           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><Edit2 size={13} /></button>
-                        <button onClick={() => { dispatch(deleteSession(sess.id)); toast.success('Session deleted') }} className="p-1.5 rounded-lg" style={{ color: 'var(--text-muted)' }}
+                        <button onClick={() => { dispatch(deleteSession(sessId)); toast.success('Session deleted') }} className="p-1.5 rounded-lg" style={{ color: 'var(--text-muted)' }}
                           onMouseEnter={e => e.currentTarget.style.background = 'var(--danger-soft)'}
                           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><Trash2 size={13} /></button>
                       </div>

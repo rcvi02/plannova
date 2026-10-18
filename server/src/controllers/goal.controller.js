@@ -26,7 +26,14 @@ export const getGoals = asyncHandler(async (req, res) => {
 // POST /api/goals
 export const createGoal = asyncHandler(async (req, res) => {
   const today = format(new Date(), 'yyyy-MM-dd')
-  const goal = await Goal.create({ ...req.body, user: req.user._id, startDate: req.body.startDate || today })
+  const data = { ...req.body, user: req.user._id, startDate: req.body.startDate || today }
+  if (data.target && !data.targetValue) data.targetValue = Number(data.target)
+  if (data.deadline && !data.targetDate) data.targetDate = data.deadline
+  if (data.type && !data.goalType) data.goalType = data.type
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+
+  const goal = await Goal.create(data)
   await goal.populate('subject', 'name color icon')
   return sendSuccess(res, { message: 'Goal created.', data: { goal }, statusCode: 201 })
 })
@@ -40,9 +47,16 @@ export const getGoal = asyncHandler(async (req, res) => {
 
 // PUT /api/goals/:id
 export const updateGoal = asyncHandler(async (req, res) => {
+  const data = { ...req.body }
+  if (data.target && !data.targetValue) data.targetValue = Number(data.target)
+  if (data.deadline && !data.targetDate) data.targetDate = data.deadline
+  if (data.type && !data.goalType) data.goalType = data.type
+  if (data.subjectId && !data.subject) data.subject = data.subjectId
+  if (data.subject === '') data.subject = null
+
   const goal = await Goal.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
-    req.body,
+    data,
     { new: true, runValidators: true }
   ).populate('subject', 'name color icon')
   if (!goal) return sendError(res, { message: 'Goal not found.', statusCode: 404 })
