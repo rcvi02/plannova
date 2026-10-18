@@ -71,6 +71,10 @@ export const googleLogin = asyncHandler(async (req, res) => {
     return sendError(res, { message: 'No Google credential provided', statusCode: 400 })
   }
 
+  if (!process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID_HERE') {
+    return sendError(res, { message: 'Google OAuth is not configured on this server.', statusCode: 503 })
+  }
+
   try {
     const ticket = await client.verifyIdToken({
       idToken: credential,
