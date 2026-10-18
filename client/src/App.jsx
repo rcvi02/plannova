@@ -65,6 +65,9 @@ export default function App() {
       }
       window.addEventListener('auth:unauthorized', handleUnauthorized)
 
+      const startTime = Date.now()
+      const minLoaderTime = 2200 // Ensure complete pattern drawing finishes gracefully
+
       if (isAuthenticated) {
         try {
            await dispatch(fetchMe()).unwrap()
@@ -85,8 +88,12 @@ export default function App() {
         }
       }
 
-      // Remove the intentional delay to make the app load faster
-      setIsInitializing(false)
+      // Allow complete pattern drawing, letters, and progress bar to finish before transitioning
+      const elapsed = Date.now() - startTime
+      const remaining = Math.max(0, minLoaderTime - elapsed)
+      setTimeout(() => {
+        setIsInitializing(false)
+      }, remaining)
 
       return () => window.removeEventListener('auth:unauthorized', handleUnauthorized)
     }
@@ -124,12 +131,13 @@ export default function App() {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [themeMode])
 
-  if (isInitializing) {
-    return <PageLoader />
-  }
-
   return (
-    <Suspense fallback={<PageLoader />}>
+    <>
+      <AnimatePresence mode="wait">
+        {isInitializing && <PageLoader key="app-init-loader" />}
+      </AnimatePresence>
+      {!isInitializing && (
+        <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* Public */}
         <Route path="/" element={<LandingPage />} />
@@ -169,5 +177,7 @@ export default function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
+    )}
+  </>
   )
 }
