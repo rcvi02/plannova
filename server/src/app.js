@@ -3,6 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 import mongoSanitize from 'express-mongo-sanitize'
 import { apiLimiter } from './middleware/rateLimiter.js'
@@ -108,17 +109,34 @@ app.use('/api/*', (req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.method} ${req.originalUrl} not found.` })
 })
 
-// ─── Serve React Frontend in Production ───────────────────────────────────────
+// ─── Serve React Frontend in Production (if built) ───────────────────────────
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../../client/dist')
-  app.use(express.static(distPath))
+  const indexHtml = path.resolve(distPath, 'index.html')
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(distPath, 'index.html'))
-  })
+  if (fs.existsSync(indexHtml)) {
+    app.use(express.static(distPath))
+    app.get('*', (req, res) => {
+      res.sendFile(indexHtml)
+    })
+  } else {
+    // When only backend is deployed on Render/Railway
+    app.get('/', (req, res) => {
+      res.json({
+        success: true,
+        message: 'Plannova Backend API is live & running!',
+        health: '/api/health',
+        environment: process.env.NODE_ENV,
+      })
+    })
+  }
 } else {
-  app.use((req, res) => {
-    res.status(404).json({ success: false, message: `Route ${req.method} ${req.originalUrl} not found.` })
+  app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Plannova API is running in development mode',
+      health: '/api/health',
+    })
   })
 }
 
