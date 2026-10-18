@@ -8,9 +8,11 @@ const connectDB = async () => {
   while (retries < maxRetries) {
     try {
       const conn = await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 10000,
+        retryWrites: true,
+        w: 'majority',
       })
-      console.log(`✅ MongoDB connected: ${conn.connection.host}`)
+      console.log(`✅ MongoDB connected: ${conn.connection.host} [DB: ${conn.connection.name}]`)
       return conn
     } catch (err) {
       retries++
@@ -23,7 +25,7 @@ const connectDB = async () => {
         console.error('💀 Max retries reached. Exiting...')
         process.exit(1)
       }
-      await new Promise(res => setTimeout(res, 2000))
+      await new Promise(res => setTimeout(res, 2500))
     }
   }
 }
